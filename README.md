@@ -6,7 +6,7 @@ Murder Amnesia é um jogo de plataformas 3D em primeira pessoa, desenvolvido no 
 - [Alexandre Costa](https://github.com/alexandre97costa)
 - [Ana Caldeira](https://github.com/anacaldeira98)
 - [Constança Fernandes](https://github.com/SirenaCutie)
-- [Hugo Gonçalves](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+- [Hugo Gonçalves](https://github.com/cg-Hugo)
 - [João Sequeira](https://github.com/JoaoSeque1ra)
 - [Raquel Almeida](https://github.com/Raquelmeida)
 
