@@ -1,6 +1,8 @@
 ![Logo](readme-imgs/game-logo.png)
 
-Murder Amnesia é um jogo de plataformas 3D em primeira pessoa, desenvolvido no âmbito da cadeira de Desenvolvimento de Jogos na licenciatura de Tecnologias e Design Multimédia. 
+_Murder Amnesia_ é um jogo de plataformas 3D em primeira pessoa, desenvolvido no âmbito da cadeira de Desenvolvimento de Jogos na licenciatura de Tecnologias e Design Multimédia. 
+
+📜 O Game Design Document deste projeto está disponível na [wiki](https://github.com/alexandre97costa/murder-amnesia/wiki) deste repositório.
 
 ## 👨‍💻 Autores
 - [Alexandre Costa](https://github.com/alexandre97costa)
