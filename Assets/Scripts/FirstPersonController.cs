@@ -73,6 +73,7 @@ namespace StarterAssets
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
+		private GameObject cameraPosition;
 
 		private const float _threshold = 0.01f;
 
@@ -107,6 +108,11 @@ namespace StarterAssets
 				Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 			#endif
 
+			cameraPosition = transform.Find("CameraPosition").gameObject;
+			if (cameraPosition == null) {
+				Debug.Log("The player's camera position was not found! The crouch view will not work.");
+			}
+
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
@@ -127,10 +133,16 @@ namespace StarterAssets
 
 		private void Crouch()
 		{
+			Vector3 cam_pos = cameraPosition.transform.localPosition;
+
 			if (_input.crouch) {
-				Debug.Log("Crouch!");
+				cameraPosition.transform.localPosition = new Vector3(0f, 1f, 0.1f);
+				_controller.height = 1f;
+				_controller.center = new Vector3(0, 0.5f, 0);
 			} else {
-				
+				cameraPosition.transform.localPosition = new Vector3(0f, 1.7f, 0.1f);
+				_controller.height = 1.9f;
+				_controller.center = new Vector3(0, 0.95f, 0);
 			}
 		}
 
@@ -169,11 +181,11 @@ namespace StarterAssets
 
 			float targetSpeed = MoveSpeed;
 
-			if (_input.crouch) {
-				targetSpeed = CrouchSpeed;
-			} else {
-				if (_input.sprint) {
-					targetSpeed = SprintSpeed;
+			if (Grounded) {
+				if (_input.crouch) {
+					targetSpeed = CrouchSpeed;
+				} else if (_input.sprint) {
+						targetSpeed = SprintSpeed;
 				}
 			}
 
