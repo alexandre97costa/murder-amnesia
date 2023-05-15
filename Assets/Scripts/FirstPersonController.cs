@@ -13,9 +13,11 @@ namespace StarterAssets
 	{
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
-		public float MoveSpeed = 4.0f;
+		public float MoveSpeed = 8.0f;
 		[Tooltip("Sprint speed of the character in m/s")]
-		public float SprintSpeed = 6.0f;
+		public float SprintSpeed = 16.0f;
+		[Tooltip("Crouch speed of the character in m/s")]
+		public float CrouchSpeed = 4.0f;
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
@@ -99,11 +101,11 @@ namespace StarterAssets
 		{
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
-			_playerInput = GetComponent<PlayerInput>();
-#else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
-#endif
+			#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+				_playerInput = GetComponent<PlayerInput>();
+			#else
+				Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+			#endif
 
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
@@ -115,11 +117,21 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			Crouch();
 		}
 
 		private void LateUpdate()
 		{
 			CameraRotation();
+		}
+
+		private void Crouch()
+		{
+			if (_input.crouch) {
+				Debug.Log("Crouch!");
+			} else {
+				
+			}
 		}
 
 		private void GroundedCheck()
@@ -154,7 +166,16 @@ namespace StarterAssets
 		private void Move()
 		{
 			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+
+			float targetSpeed = MoveSpeed;
+
+			if (_input.crouch) {
+				targetSpeed = CrouchSpeed;
+			} else {
+				if (_input.sprint) {
+					targetSpeed = SprintSpeed;
+				}
+			}
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -214,6 +235,7 @@ namespace StarterAssets
 				// Jump
 				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
+					Debug.Log("Jump!");
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 				}

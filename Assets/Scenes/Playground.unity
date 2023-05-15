@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 48446341}
   - component: {fileID: 48446345}
   m_Layer: 8
-  m_Name: NewPlayer
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -246,6 +246,7 @@ MonoBehaviour:
   look: {x: 0, y: 0}
   jump: 0
   sprint: 0
+  crouch: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
@@ -262,7 +263,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 8
-  SprintSpeed: 6
+  SprintSpeed: 16
+  CrouchSpeed: 1
   RotationSpeed: 1
   SpeedChangeRate: 20
   JumpHeight: 1.2
@@ -1067,7 +1069,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1340865847}
   m_Layer: 8
-  m_Name: NewPlayerCamera
+  m_Name: CameraPosition
   m_TagString: CinemachineTarget
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
