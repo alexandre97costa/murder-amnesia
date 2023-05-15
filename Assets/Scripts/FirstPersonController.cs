@@ -11,6 +11,63 @@ namespace StarterAssets
 #endif
 	public class FirstPersonController : MonoBehaviour
 	{
+		public enum MovementType {Default, Inertia};
+		[Space(10)]
+		[Tooltip("Choose which movement type will control the character")]
+		public MovementType movementType;
+
+		[Header("Inertia Movement")]
+		
+		// 🏃‍♂️ Run
+		[Space(5)]
+		[Tooltip("Initial movement speed (in m/s).")]
+		public float InitialSpeed = 7.0f;
+		[Tooltip("Maximum speed obtainable by running (in m/s). Will stack with boosts.")]
+		public float MaxSpeed = 10.0f;
+		[Tooltip("How fast will the player reach max speed (in m/s).")]
+		public float RunningAcceleration = 2.0f;
+		
+		// 🦘 Jump
+		[Space(5)]
+		[Tooltip("How much will a jump increase the player's speed.")]
+		public float JumpBoost = 1.1f;
+		[Tooltip("The maximum boost obtainable by jumps.")]
+		public float MaxJumpBoost = 4.0f;
+
+		// 🎿 Slide
+		[Space(5)]
+		[Tooltip("How much will a slide increase the player's speed.")]
+		public float SlideBoost = 1.1f;
+		[Tooltip("The maximum boost obtainable by slides.")]
+		public float MaxSlideBoost = 4.0f;
+		[Tooltip("How much will the ramp angle affect the acceleration.")]
+		public float SlideAngleMultiplier = 1.0f;
+		[Tooltip("How much will the player slow down when sliding in flat surfaces.")]
+		public float SlideDecayMultiplier = 1.0f;
+
+		// 🕺 Wall Jump
+		[Space(5)]
+		[Tooltip("How much will a wall jump increase the player's speed.")]
+		public float WallJumpBoost = 1.1f;
+		[Tooltip("The maximum boost obtainable by wall jumps.")]
+		public float MaxWallJumpBoost = 4.0f;
+
+		// 🏄‍♂️ Wall Run
+		[Space(5)]
+		[Tooltip("How much will a wall run increase the player's speed.")]
+		public float WallRunBoost = 1.1f;
+		[Tooltip("The maximum boost obtainable by wall runs.")]
+		public float MaxWallRunBoost = 4.0f;
+		[Tooltip("How long will the player be able to stick to a wall (in seconds).")]
+		public float WallRunDecayMultiplier = 3.0f;
+
+		[ContextMenu("Calculate Max Speed")]
+		void CalculateMaxSpeed() {
+			float max = MaxSpeed + MaxJumpBoost + MaxSlideBoost + MaxWallJumpBoost + MaxWallRunBoost;
+			Debug.Log("Theoretical Max Speed: " + max + "m/s");
+		}
+
+		[Space(10)]
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 8.0f;
@@ -18,18 +75,19 @@ namespace StarterAssets
 		public float SprintSpeed = 16.0f;
 		[Tooltip("Crouch speed of the character in m/s")]
 		public float CrouchSpeed = 4.0f;
+		[Tooltip("The height of the player when crouched, in meters")]
+		public float CrouchHeight = 1.0f;
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 
 		[Space(10)]
+		[Header("Jump")]
 		[Tooltip("The height the player can jump")]
 		public float JumpHeight = 1.2f;
 		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
 		public float Gravity = -15.0f;
-
-		[Space(10)]
 		[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
 		public float JumpTimeout = 0.1f;
 		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
@@ -41,7 +99,7 @@ namespace StarterAssets
 		[Tooltip("Useful for rough ground")]
 		public float GroundedOffset = -0.14f;
 		[Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-		public float GroundedRadius = 0.5f;
+		public float GroundedRadius = 0.22f;
 		[Tooltip("What layers the character uses as ground")]
 		public LayerMask GroundLayers;
 
@@ -56,11 +114,22 @@ namespace StarterAssets
 		// cinemachine
 		private float _cinemachineTargetPitch;
 
+		// 🚀 inertia movement
+		private float currentRunningSpeed;
+		private float currentJumpBoost;
+		private float currentSlideBoost;
+		private float currentWallJumpBoost;
+		private float currentWallRunBoost;
+
 		// player
 		private float _speed;
 		private float _rotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
+
+		// crouch
+		private float standingHeight;
+		private bool canUncrouch;
 
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
@@ -116,45 +185,70 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+
+			standingHeight = _controller.height;
 		}
 
-		private void Update()
-		{
+		private void Update() {
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
 			Crouch();
 		}
 
-		private void LateUpdate()
-		{
+		private void FixedUpdate() {
+			UncrouchCheck();
+		}
+
+		private void LateUpdate() {
 			CameraRotation();
 		}
 
-		private void Crouch()
-		{
+		private void Crouch() {
 			Vector3 cam_pos = cameraPosition.transform.localPosition;
 
-			if (_input.crouch) {
-				cameraPosition.transform.localPosition = new Vector3(0f, 1f, 0.1f);
-				_controller.height = 1f;
-				_controller.center = new Vector3(0, 0.5f, 0);
+			if (_input.crouch || (Grounded && !canUncrouch)) {
+				cameraPosition.transform.localPosition = new Vector3(cam_pos.x, CrouchHeight - 0.2f, cam_pos.z);
+				_controller.height = CrouchHeight;
+				_controller.center = new Vector3(0, CrouchHeight / 2f, 0);
+
 			} else {
-				cameraPosition.transform.localPosition = new Vector3(0f, 1.7f, 0.1f);
-				_controller.height = 1.9f;
-				_controller.center = new Vector3(0, 0.95f, 0);
+				cameraPosition.transform.localPosition = new Vector3(cam_pos.x, standingHeight - 0.2f, cam_pos.z);
+				_controller.height = standingHeight;
+				_controller.center = new Vector3(0, standingHeight / 2f, 0);
 			}
 		}
 
-		private void GroundedCheck()
-		{
+		private void UncrouchCheck() {
+			// https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
+
+			// Bit shift the index of the layer (8) to get a bit mask
+			int layerMask = 1 << 8;
+			// This would cast rays only against colliders in layer 8.
+			// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+			layerMask = ~layerMask;
+
+			RaycastHit hit;
+			// Does the ray intersect any objects excluding the player layer
+			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up), out hit, 2, layerMask))
+			{
+				Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * hit.distance, Color.red);
+				canUncrouch = false;
+			}
+			else
+			{
+				Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * 2, Color.green);
+				canUncrouch = true;
+			}
+		}
+
+		private void GroundedCheck() {
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
 			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
 		}
 
-		private void CameraRotation()
-		{
+		private void CameraRotation() {
 			// if there is an input
 			if (_input.look.sqrMagnitude >= _threshold)
 			{
@@ -175,14 +269,13 @@ namespace StarterAssets
 			}
 		}
 
-		private void Move()
-		{
+		private void Move() {
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 
 			float targetSpeed = MoveSpeed;
 
 			if (Grounded) {
-				if (_input.crouch) {
+				if (_input.crouch || !canUncrouch) {
 					targetSpeed = CrouchSpeed;
 				} else if (_input.sprint) {
 						targetSpeed = SprintSpeed;
@@ -231,8 +324,7 @@ namespace StarterAssets
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 		}
 
-		private void JumpAndGravity()
-		{
+		private void JumpAndGravity() {
 			if (Grounded)
 			{
 				// reset the fall timeout timer
@@ -280,15 +372,13 @@ namespace StarterAssets
 			}
 		}
 
-		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
-		{
+		private static float ClampAngle(float lfAngle, float lfMin, float lfMax) {
 			if (lfAngle < -360f) lfAngle += 360f;
 			if (lfAngle > 360f) lfAngle -= 360f;
 			return Mathf.Clamp(lfAngle, lfMin, lfMax);
 		}
 
-		private void OnDrawGizmosSelected()
-		{
+		private void OnDrawGizmosSelected() {
 			Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
 			Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
 
