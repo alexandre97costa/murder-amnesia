@@ -111,6 +111,10 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
+		[Header("References")]
+		public Transform orientation;
+		private Rigidbody rb;
+
 		// cinemachine
 		private float _cinemachineTargetPitch;
 
@@ -135,9 +139,40 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
-	
-		#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
-			private PlayerInput _playerInput;
+		//Wall Running
+		private bool wallrunning;
+		//public KeyCode upwardsRunKey = KeyCode.LeftShift;
+		//public KeyCode downwardsRunKey = KeyCode.LeftControl;
+		private bool upwardsRunning;
+		private bool downwardsRunning;
+		private float horizontalInput;
+		private float verticalInput;
+
+		public LayerMask whatIsWall;
+		public LayerMask whatIsGround;
+		public float wallRunForce;
+		public float wallJumpUpForce;
+		public float wallJumpSideForce;
+		public float wallClimbSpeed;
+		public float maxWallRunTime;
+		private float wallRunTimer;
+
+		public float wallCheckDistance;
+		public float minJumpHeight;
+		private RaycastHit leftWallhit;
+		private RaycastHit rightWallhit;
+		private bool wallLeft;
+		private bool wallRight;
+
+		private bool exitingWall;
+		public float exitWallTime;
+		private float exitWallTimer;
+
+		public bool useGravity;
+		public float gravityCounterForce;
+
+#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+		private PlayerInput _playerInput;
 		#endif
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
@@ -195,10 +230,14 @@ namespace StarterAssets
 			GroundedCheck();
 			Move();
 			Crouch();
+			//CheckForWall();
+			//StateMachine();
 		}
 
 		private void FixedUpdate() {
 			UncrouchCheck();
+			//if (wallrunning)
+				//WallRunningMovement();
 		}
 
 		private void LateUpdate() {
@@ -388,6 +427,138 @@ namespace StarterAssets
 
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+		}
+
+		//Wall Running
+		private void CheckForWall()
+		{
+			wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallhit, wallCheckDistance, whatIsWall);
+			wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallhit, wallCheckDistance, whatIsWall);
+		}
+
+		private bool AboveGround()
+		{
+			return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight, whatIsGround);
+		}
+
+		private void StateMachine()
+		{
+			// Getting Inputs
+			//horizontalInput = Input.GetAxisRaw("Horizontal");
+			//verticalInput = Input.GetAxisRaw("Vertical");
+
+			//upwardsRunning = Input.GetKey(upwardsRunKey);
+			//downwardsRunning = Input.GetKey(downwardsRunKey);
+
+			// State 1 - Wallrunning
+			if ((wallLeft || wallRight) && verticalInput > 0 && AboveGround() && !exitingWall)
+			{
+				if (!wallrunning)
+					StartWallRun();
+
+				// wallrun timer
+				if (wallRunTimer > 0)
+					wallRunTimer -= Time.deltaTime;
+
+				if (wallRunTimer <= 0 && wallrunning)
+				{
+					exitingWall = true;
+					exitWallTimer = exitWallTime;
+				}
+
+				// wall jump
+				if (_input.wallrun) 
+					WallJump();
+			}
+
+			// State 2 - Exiting
+			else if (exitingWall)
+			{
+				if (wallrunning)
+					StopWallRun();
+
+				if (exitWallTimer > 0)
+					exitWallTimer -= Time.deltaTime;
+
+				if (exitWallTimer <= 0)
+					exitingWall = false;
+			}
+
+			// State 3 - None
+			else
+			{
+				if (wallrunning)
+					StopWallRun();
+			}
+		}
+
+		private void StartWallRun()
+		{
+			wallrunning = true;
+
+			wallRunTimer = maxWallRunTime;
+
+			rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+			//DAR FIX
+			// apply camera effects
+			//cam.DoFov(90f);
+			//if (wallLeft) cam.DoTilt(-5f);
+			//if (wallRight) cam.DoTilt(5f);
+		}
+
+		private void WallRunningMovement()
+		{
+			rb.useGravity = useGravity;
+
+			Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
+
+			Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
+
+			if ((orientation.forward - wallForward).magnitude > (orientation.forward - -wallForward).magnitude)
+				wallForward = -wallForward;
+
+			// forward force
+			rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
+
+			//NÃO USADO
+			// upwards/downwards force
+			//if (upwardsRunning)
+			//	rb.velocity = new Vector3(rb.velocity.x, wallClimbSpeed, rb.velocity.z);
+			//if (downwardsRunning)
+			//	rb.velocity = new Vector3(rb.velocity.x, -wallClimbSpeed, rb.velocity.z);
+
+			// push to wall force
+			if (!(wallLeft && horizontalInput > 0) && !(wallRight && horizontalInput < 0))
+				rb.AddForce(-wallNormal * 100, ForceMode.Force);
+
+			// weaken gravity
+			if (useGravity)
+				rb.AddForce(transform.up * gravityCounterForce, ForceMode.Force);
+		}
+
+		private void StopWallRun()
+		{
+			wallrunning = false;
+
+			// reset camera effects
+			//cam.DoFov(80f);
+			//cam.DoTilt(0f);
+		}
+
+		private void WallJump()
+		{
+			// enter exiting wall state
+			exitingWall = true;
+			exitWallTimer = exitWallTime;
+
+			Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
+
+			Vector3 forceToApply = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
+
+			// reset y velocity and add force
+			rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+			rb.AddForce(forceToApply, ForceMode.Impulse);
 		}
 	}
 }
