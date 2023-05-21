@@ -136,13 +136,14 @@ namespace StarterAssets
 		private float _fallTimeoutDelta;
 
 	
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
-		private PlayerInput _playerInput;
-#endif
+		#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+			private PlayerInput _playerInput;
+		#endif
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 		private GameObject cameraPosition;
+		 
 
 		private const float _threshold = 0.01f;
 

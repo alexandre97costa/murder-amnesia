@@ -45,7 +45,6 @@ namespace StarterAssets
 			SprintInput(value.isPressed);
 		}
 
-		// 🍆
 		public void OnCrouch(InputValue value)
 		{
 			Debug.Log("OnCrouch: " + value);
@@ -74,7 +73,6 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 
-		// 🍆
 		public void CrouchInput(bool newCrouchState)
 		{
 			crouch = newCrouchState;
