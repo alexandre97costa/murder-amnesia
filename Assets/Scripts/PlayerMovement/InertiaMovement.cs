@@ -96,11 +96,11 @@ public class InertiaMovement : MonoBehaviour
     }
 
     // 🚀 inertia movement speed
-    private float currentRunningSpeed;
-    private float currentJumpBoost;
-    private float currentSlideBoost;
-    private float currentWallJumpBoost;
-    private float currentWallRunBoost;
+    [HideInInspector] public float currentRunningSpeed;
+    [HideInInspector] public float currentJumpBoost;
+    [HideInInspector] public float currentSlideBoost;
+    [HideInInspector] public float currentWallJumpBoost;
+    [HideInInspector] public float currentWallRunBoost;
 
     // crouch
 	private float standingHeight;
@@ -113,21 +113,15 @@ public class InertiaMovement : MonoBehaviour
     private CharacterController _controller;
 	private StarterAssetsInputs _input;
     private GameObject cameraPosition;
+    private GameObject orientation;
 
     void Start()
     {
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<StarterAssetsInputs>();
-        #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
-            _playerInput = GetComponent<PlayerInput>();
-        #else
-            Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
-        #endif
-
+        _playerInput = GetComponent<PlayerInput>();
+        
         cameraPosition = transform.Find("CameraPosition").gameObject;
-        if (cameraPosition == null) {
-            Debug.Log("The player's camera position was not found! The crouch view will not work.");
-        }
 
         standingHeight = _controller.height;
     }
@@ -143,7 +137,10 @@ public class InertiaMovement : MonoBehaviour
     }
 
     void Move() {
+			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y);
+            inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
 
+			_controller.Move(inputDirection.normalized * InitialSpeed * Time.deltaTime);
     }
 
     private void Crouch() {

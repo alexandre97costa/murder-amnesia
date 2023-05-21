@@ -356,6 +356,11 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  currentRunningSpeed: 0
+  currentJumpBoost: 0
+  currentSlideBoost: 0
+  currentWallJumpBoost: 0
+  currentWallRunBoost: 0
 --- !u!114 &48446347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,7 +374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotationSpeed: 1
-  CinemachineCameraTarget: {fileID: 986693016}
+  CinemachineCameraTarget: {fileID: 1340865846}
   TopClamp: 90
   BottomClamp: -90
 --- !u!1001 &137583026
@@ -951,12 +956,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8345070699079395522, guid: 09aade0ecefd01e4b8f7661acf64f5c2,
     type: 3}
   m_PrefabInstance: {fileID: 2084445384}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &986693016 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8762286023885395077, guid: 9c489a8547f4d9e4387da15a4ff82c81,
-    type: 3}
-  m_PrefabInstance: {fileID: 7288094137546172433}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1005421481
 PrefabInstance:
@@ -2593,7 +2592,7 @@ GameObject:
   - component: {fileID: 2686890238639790165}
   m_Layer: 0
   m_Name: DummyRig
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2610,7 +2609,7 @@ GameObject:
   - component: {fileID: 2686890238634216973}
   m_Layer: 0
   m_Name: DummyMesh
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

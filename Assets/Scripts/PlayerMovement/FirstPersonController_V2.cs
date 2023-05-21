@@ -11,11 +11,11 @@ namespace StarterAssets
 #endif
 	public class FirstPersonController_V2 : MonoBehaviour
 	{
+
+
+		[Header("Camera")]
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
-
-
-		[Header("Cinemachine")]
 		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
 		public GameObject CinemachineCameraTarget;
 		[Tooltip("How far in degrees can you move the camera up")]
