@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: 619e305f5165a9946b7f72464e44ca4a, type: 3}
   m_Sun: {fileID: 2114283754330233425}
-  m_IndirectSpecularColor: {r: 0.029152213, g: 0.064445764, b: 0.12695098, a: 1}
+  m_IndirectSpecularColor: {r: 0.029152155, g: 0.06444568, b: 0.12695068, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -206,6 +206,8 @@ GameObject:
   - component: {fileID: 48446341}
   - component: {fileID: 48446346}
   - component: {fileID: 48446347}
+  - component: {fileID: 48446349}
+  - component: {fileID: 48446348}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -248,6 +250,7 @@ MonoBehaviour:
   jump: 0
   sprint: 0
   crouch: 0
+  wallrun: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
@@ -375,6 +378,88 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RotationSpeed: 1
   CinemachineCameraTarget: {fileID: 1340865846}
+  TopClamp: 90
+  BottomClamp: -90
+--- !u!114 &48446348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48446339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7166f2ba8fb83504c9cf516042b83665, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementType: 0
+  WallRunBoost: 1.1
+  MaxWallRunBoost: 4
+  WallRunDecayMultiplier: 3
+  CinemachineCameraTarget: {fileID: 1203695593}
+  TopClamp: 90
+  BottomClamp: -90
+  orientation: {fileID: 48446340}
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 0
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  wallRunForce: 10
+  wallJumpUpForce: 10
+  wallJumpSideForce: 10
+  wallClimbSpeed: 2
+  maxWallRunTime: 5
+  wallCheckDistance: 1
+  minJumpHeight: 1
+  exitWallTime: 3
+  useGravity: 0
+  gravityCounterForce: 0
+--- !u!114 &48446349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48446339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55919ac34a26952479f3fc91f777b2fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementType: 0
+  InitialSpeed: 7
+  MaxSpeed: 10
+  RunningAcceleration: 2
+  JumpBoost: 1.1
+  MaxJumpBoost: 4
+  SlideBoost: 1.1
+  MaxSlideBoost: 4
+  SlideAngleMultiplier: 1
+  SlideDecayMultiplier: 1
+  WallJumpBoost: 1.1
+  MaxWallJumpBoost: 4
+  WallRunBoost: 1.1
+  MaxWallRunBoost: 4
+  WallRunDecayMultiplier: 3
+  MoveSpeed: 8
+  SprintSpeed: 16
+  CrouchSpeed: 4
+  CrouchHeight: 1
+  RotationSpeed: 1
+  SpeedChangeRate: 10
+  JumpHeight: 1.2
+  Gravity: -15
+  JumpTimeout: 0.1
+  FallTimeout: 0.15
+  Grounded: 1
+  GroundedOffset: -0.14
+  GroundedRadius: 0.22
+  GroundLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  CinemachineCameraTarget: {fileID: 1203695593}
   TopClamp: 90
   BottomClamp: -90
 --- !u!1001 &137583026
@@ -1087,6 +1172,12 @@ Transform:
   m_Father: {fileID: 2114283753834967213}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1203695593 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8762286023885395077, guid: 9c489a8547f4d9e4387da15a4ff82c81,
+    type: 3}
+  m_PrefabInstance: {fileID: 7288094137546172433}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1340865846
 GameObject:
   m_ObjectHideFlags: 0
