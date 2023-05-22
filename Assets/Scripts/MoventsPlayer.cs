@@ -17,7 +17,7 @@ public class MoventsPlayer : MonoBehaviour
 
     void Start()
     {
-        // Inicialize a variável animationsControllers aqui
+        // Inicialize a variï¿½vel animationsControllers aqui
         animationsControllers = GetComponent<AnimationsControllers>();
         keyInputs = GetComponent<StarterAssetsInputs>();
         inertiaMovement = GetComponent<InertiaMovement>();
@@ -31,7 +31,7 @@ public class MoventsPlayer : MonoBehaviour
 
     /*------------VERTICAL------------*/
     /*
-        keyInputs.move.y.Equals(-1) -> Traz
+        keyInputs.move.y.Equals(-1) -> TrÃ¡s
         keyInputs.move.y.Equals(1) -> Frente
     */
 
