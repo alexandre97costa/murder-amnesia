@@ -61,6 +61,17 @@ public class InertiaMovement : MonoBehaviour
     [Tooltip("How much will the player slow down when sliding in flat surfaces.")]
     public float SlideDecayMultiplier = 1.0f;
 
+    [Space(10)]
+	[Header("Jump")]
+	[Tooltip("The height the player can jump")]
+	public float JumpHeight = 1.2f;
+	[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
+	public float Gravity = -15.0f;
+	[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
+	public float JumpTimeout = 0.1f;
+	[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
+	public float FallTimeout = 0.15f;
+
     // 🕺 Wall Jump
     [Space(10)]
     [Header("Wall Jump")]
@@ -103,9 +114,22 @@ public class InertiaMovement : MonoBehaviour
     [HideInInspector] public float currentWallJumpBoost;
     [HideInInspector] public float currentWallRunBoost;
 
+    // player
+	private float _speed;
+	private float _rotationVelocity;
+	private float _verticalVelocity;
+	private float _terminalVelocity = 53.0f;
+
     // crouch
 	private float standingHeight;
 	private bool canUncrouch;
+
+    //jump
+    private Vector3 playerVelocity;
+    private bool groundedPlayer;
+    private float playerSpeed = 2.0f;
+    private float jumpHeight = 1.0f;
+    private float gravityValue = -9.81f;
 
     // components
     #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -131,6 +155,7 @@ public class InertiaMovement : MonoBehaviour
     void Update() {
         Move();
         Crouch();
+        Jump();
     }
 
     void FixedUpdate() {
@@ -171,6 +196,29 @@ public class InertiaMovement : MonoBehaviour
 
         return currentRunningSpeed;
     }
+
+    private void Jump() {
+
+			groundedPlayer = _controller.isGrounded;
+
+        	if (groundedPlayer && playerVelocity.y < 0)
+        	{
+            	playerVelocity.y = 0f;
+        	}
+
+        	Vector3 move = new Vector3(_input.move.x, 0, _input.move.y);
+        	_controller.Move(move * Time.deltaTime * playerSpeed);
+
+        	
+        	if (_input.jump && groundedPlayer)
+        	{
+            	playerVelocity.y += Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
+        	}
+
+        	playerVelocity.y += gravityValue * Time.deltaTime;
+        	_controller.Move(playerVelocity * Time.deltaTime);
+
+		}
 
     private void Crouch() {
         Vector3 cam_pos = cameraPosition.transform.localPosition;

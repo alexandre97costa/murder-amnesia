@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: 619e305f5165a9946b7f72464e44ca4a, type: 3}
   m_Sun: {fileID: 2114283754330233425}
-  m_IndirectSpecularColor: {r: 0.029152155, g: 0.06444568, b: 0.12695068, a: 1}
+  m_IndirectSpecularColor: {r: 0.029152213, g: 0.064445764, b: 0.12695098, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -348,17 +348,21 @@ MonoBehaviour:
   MaxSlideBoost: 4
   SlideAngleMultiplier: 1
   SlideDecayMultiplier: 1
+  JumpHeight: 1.2
+  Gravity: -15
+  JumpTimeout: 0.1
+  FallTimeout: 0.15
   WallJumpBoost: 1.1
   MaxWallJumpBoost: 4
   WallRunBoost: 1.1
   MaxWallRunBoost: 4
   WallRunDecayMultiplier: 3
-  Grounded: 1
+  Grounded: 0
   GroundedOffset: -0.14
-  GroundedRadius: 0.22
+  GroundedRadius: 0.55
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   currentRunningSpeed: 0
   currentJumpBoost: 0
   currentSlideBoost: 0
@@ -387,7 +391,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48446339}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7166f2ba8fb83504c9cf516042b83665, type: 3}
   m_Name: 
@@ -423,7 +427,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48446339}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55919ac34a26952479f3fc91f777b2fa, type: 3}
   m_Name: 
@@ -453,12 +457,12 @@ MonoBehaviour:
   Gravity: -15
   JumpTimeout: 0.1
   FallTimeout: 0.15
-  Grounded: 1
+  Grounded: 0
   GroundedOffset: -0.14
   GroundedRadius: 0.22
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   CinemachineCameraTarget: {fileID: 1203695593}
   TopClamp: 90
   BottomClamp: -90
