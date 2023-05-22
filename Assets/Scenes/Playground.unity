@@ -332,9 +332,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696202756793f2b409621e4da90ab892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialSpeed: 7
-  MaxSpeed: 10
-  RunningAcceleration: 2
+  InitialRunningSpeed: 7
+  MaxRunningSpeed: 10
+  RunningAcceleration: 0.005
   GelExtraSpeed: 5
   GelDuration: 10
   JumpBoost: 1.1

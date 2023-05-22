@@ -17,9 +17,9 @@ public class InertiaMovement : MonoBehaviour
     [Space(10)]
     [Header("Running")]
     [Tooltip("Initial movement speed (in m/s).")]
-    public float InitialSpeed = 7.0f;
+    public float InitialRunningSpeed = 7.0f;
     [Tooltip("Maximum speed obtainable by running (in m/s). Will stack with boosts.")]
-    public float MaxSpeed = 10.0f;
+    public float MaxRunningSpeed = 10.0f;
     [Tooltip("How fast will the player reach max speed (in m/s).")]
     public float RunningAcceleration = 2.0f;
 
@@ -91,12 +91,12 @@ public class InertiaMovement : MonoBehaviour
 
     [ContextMenu("Calculate Max Speed")]
     void CalculateMaxSpeed() {
-        float max = MaxSpeed + MaxJumpBoost + MaxSlideBoost + MaxWallJumpBoost + MaxWallRunBoost;
+        float max = MaxRunningSpeed + MaxJumpBoost + MaxSlideBoost + MaxWallJumpBoost + MaxWallRunBoost;
         Debug.Log("Theoretical Max Speed: " + max + "m/s");
     }
 
     // 🚀 inertia movement speed
-    [HideInInspector] public float currentRunningSpeed;
+    [HideInInspector] public float currentRunningSpeed = 0.0f;
     [HideInInspector] public float currentJumpBoost;
     [HideInInspector] public float currentSlideBoost;
     [HideInInspector] public float currentWallJumpBoost;
@@ -137,10 +137,31 @@ public class InertiaMovement : MonoBehaviour
     }
 
     void Move() {
+            // direção do movimento
 			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y);
             inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
 
-			_controller.Move(inputDirection.normalized * InitialSpeed * Time.deltaTime);
+            // se ainda nao estiver a correr, começa na velocidade minima
+            if (currentRunningSpeed < InitialRunningSpeed) {
+                currentRunningSpeed = InitialRunningSpeed;
+            } 
+            // se ainda nao estiver a correr à velocidade máxima, acelera
+            if (currentRunningSpeed >= InitialRunningSpeed && currentRunningSpeed < MaxRunningSpeed) {
+                currentRunningSpeed += RunningAcceleration;
+            }
+            // se já estiver na velocidade maxima (ou acima), dá clamp
+            if (currentRunningSpeed >= MaxRunningSpeed) {
+                currentRunningSpeed = MaxRunningSpeed;
+            }
+
+            // se parar, muda a current running speed outra vez pra 0
+            if (_input.move == Vector2.zero) {
+                currentRunningSpeed = 0.0f;
+            }
+
+            Debug.Log("Speed: " + currentRunningSpeed );
+
+			_controller.Move(inputDirection.normalized * currentRunningSpeed * Time.deltaTime);
     }
 
     private void Crouch() {
