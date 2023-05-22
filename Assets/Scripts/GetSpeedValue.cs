@@ -19,7 +19,7 @@ public class GetSpeedValue : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        PlayerCurrentSpeed = Mathf.Round(PlayerMovement.currentRunningSpeed * 100.0f) / 100.0f;
+        PlayerCurrentSpeed = Mathf.Round(PlayerMovement.currentTotalSpeed * 100.0f) / 100.0f;
         text.text = "Speed: " + PlayerCurrentSpeed;
     }
 }

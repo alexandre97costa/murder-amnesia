@@ -97,6 +97,7 @@ public class InertiaMovement : MonoBehaviour
     }
 
     // 🚀 inertia movement speed
+    [HideInInspector] public float currentTotalSpeed = 0.0f;
     [HideInInspector] public float currentRunningSpeed = 0.0f;
     [HideInInspector] public float currentJumpBoost;
     [HideInInspector] public float currentSlideBoost;
@@ -142,15 +143,26 @@ public class InertiaMovement : MonoBehaviour
         Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y);
         inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
 
-        if (_input.crouch && Grounded) {
-            _controller.Move(inputDirection.normalized * CrouchSpeed * Time.deltaTime);
+
+        if (_input.crouch) {
+            currentTotalSpeed = CrouchSpeed;
+            ResetSpeedsAndBoosts();
         } else {
-            _controller.Move(inputDirection.normalized * Run() * Time.deltaTime);
+            currentTotalSpeed = Run();
         }
 
+
+
+        _controller.Move(inputDirection.normalized * currentTotalSpeed * Time.deltaTime);
+        
+    }
+
+    void ResetSpeedsAndBoosts() {
+        currentRunningSpeed = 0.0f;
     }
 
     float Run() {
+        
         // se ainda nao estiver a correr, começa na velocidade minima
         if (currentRunningSpeed < InitialRunningSpeed) {
             currentRunningSpeed = InitialRunningSpeed;
@@ -165,7 +177,7 @@ public class InertiaMovement : MonoBehaviour
         }
 
         // se parar, muda a current running speed outra vez pra 0
-        if (_input.move == Vector2.zero || _input.crouch) {
+        if (_input.move == Vector2.zero) {
             currentRunningSpeed = 0.0f;
         }
 
