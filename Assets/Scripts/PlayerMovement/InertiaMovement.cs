@@ -82,6 +82,7 @@ public class InertiaMovement : MonoBehaviour
     public float WallJumpBoost = 1.1f;
     [Tooltip("The maximum boost obtainable by wall jumps.")]
     public float MaxWallJumpBoost = 4.0f;
+    private Vector3 WallJumpDirection = Vector3.zero;
 
     // 🏄‍♂️ Wall Run
     [Space(10)]
@@ -161,6 +162,7 @@ public class InertiaMovement : MonoBehaviour
         Crouch();
         Jump();
         Move();
+        WallJump();
     }
 
     void FixedUpdate() {
@@ -216,28 +218,28 @@ public class InertiaMovement : MonoBehaviour
 
     private void Jump() {
 
-			groundedPlayer = _controller.isGrounded;
+        groundedPlayer = _controller.isGrounded;
 
-        	if (groundedPlayer && playerVelocity.y < 0)
-        	{
-            	playerVelocity.y = 0f;
-        	}
+        if (groundedPlayer && playerVelocity.y < 0)
+        {
+            playerVelocity.y = 0f;
+        }
 
-        	Vector3 move = new Vector3(_input.move.x, 0, _input.move.y);
-        	_controller.Move(move * Time.deltaTime * playerSpeed);
+        Vector3 move = new Vector3(_input.move.x, 0, _input.move.y);
+        _controller.Move(move * Time.deltaTime * playerSpeed);
 
-        	
-        	if (_input.jump && groundedPlayer)
-        	{
-            	playerVelocity.y += Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
-        	}
+        
+        if (_input.jump && groundedPlayer)
+        {
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
+        }
 
-        	playerVelocity.y += gravityValue * Time.deltaTime;
-        	_controller.Move(playerVelocity * Time.deltaTime);
+        playerVelocity.y += gravityValue * Time.deltaTime;
+        _controller.Move(playerVelocity * Time.deltaTime);
 
-		}
+    }
 
-        float Slide() {
+    float Slide() {
         // condições para fazer um slide
         if (isGrounded && _input.crouch && currentTotalSpeed > CrouchSpeed) {
 
@@ -312,6 +314,33 @@ public class InertiaMovement : MonoBehaviour
             canUncrouch = true;
         }
     }
+
+    private void WallJump() {
+        // 1. deteta colisoes com paredes
+        // 2. apanha a normal das paredes
+        // 3. ao saltar, dar impulso pra cima e na direção da normal.
+
+        if ((_controller.collisionFlags & CollisionFlags.Sides) != 0) {
+            // Debug.Log("Touching sides!");
+            
+        }
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit) {
+
+        if (hit.moveDirection.y >= -0.3) {
+            // Debug.Log("Collision! Normal: " + hit.normal.ToString("F3"));
+            WallJumpDirection = hit.normal;
+
+            if (_input.jump)
+            {
+                playerVelocity += WallJumpDirection;
+            }
+
+
+        }
+    }
+
 
     void NewCameraPosition(float newHeight) {
         Vector3 cam_pos = cameraPosition.transform.localPosition;

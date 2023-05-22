@@ -55,7 +55,6 @@ namespace StarterAssets
 
 		public void OnWallRun(InputValue value)
 		{
-			Debug.Log("OnWallRun: " + value);
 			WallRunInput(value.isPressed);
 		}
 #endif
