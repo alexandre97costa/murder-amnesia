@@ -51,7 +51,7 @@ public class Menus : MonoBehaviour
 
     public void FecharCreditos()
     {
-        AbrirDefinicoes();
+        FecharDefinicoes();
     }
 
     public void AbrirVideo()
@@ -59,7 +59,7 @@ public class Menus : MonoBehaviour
         painelVideo.SetActive(true); 
         painelCreditos.SetActive(false);
         painelMenuPrincipal.SetActive(false);
-        painelDefinicoes.SetActive(false);
+        painelDefinicoes.SetActive(true);
         painelSom.SetActive(false);
         painelControlos.SetActive(false);
     }
@@ -74,7 +74,7 @@ public class Menus : MonoBehaviour
         painelSom.SetActive(true);
         painelCreditos.SetActive(false);
         painelMenuPrincipal.SetActive(false);
-        painelDefinicoes.SetActive(false);
+        painelDefinicoes.SetActive(true);
         painelVideo.SetActive(false);
         painelControlos.SetActive(false);
     }
@@ -89,7 +89,7 @@ public class Menus : MonoBehaviour
         painelControlos.SetActive(true);
         painelCreditos.SetActive(false);
         painelMenuPrincipal.SetActive(false);
-        painelDefinicoes.SetActive(false);
+        painelDefinicoes.SetActive(true);
         painelSom.SetActive(false);
         painelVideo.SetActive(false);
     }
