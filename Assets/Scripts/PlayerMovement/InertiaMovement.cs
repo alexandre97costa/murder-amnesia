@@ -52,6 +52,7 @@ public class InertiaMovement : MonoBehaviour
     // 🎿 Slide
     [Space(10)]
     [Header("Slide")]
+    [HideInInspector] public bool isSliding = false;
     [Tooltip("How much will a slide increase the player's speed.")]
     public float SlideBoost = 1.1f;
     [Tooltip("The maximum boost obtainable by slides.")]
@@ -123,14 +124,8 @@ public class InertiaMovement : MonoBehaviour
 	private float _verticalVelocity;
 	private float _terminalVelocity = 53.0f;
 
-    // player
-	private float _speed;
-	private float _rotationVelocity;
-	private float _verticalVelocity;
-	private float _terminalVelocity = 53.0f;
-
     // crouch
-    private bool isCrouched = false;
+    [HideInInspector] public bool isCrouched = false;
 	private float standingHeight;
 	private bool canUncrouch;
 
@@ -246,7 +241,7 @@ public class InertiaMovement : MonoBehaviour
         // condições para fazer um slide
         if (isGrounded && _input.crouch && currentTotalSpeed > CrouchSpeed) {
 
-            Debug.Log("Sliding!");
+            isSliding = true;
             
             // muda a velocidade
             if (currentSlideBoost == 0.0f) {
@@ -265,11 +260,13 @@ public class InertiaMovement : MonoBehaviour
 
         // se parar de fazer crouch e ainda estiver numa speed acima de crouch speed, sobe a câmara
         if (!_input.crouch &&  currentTotalSpeed > CrouchSpeed) {
+            isSliding = false;
             NewCameraPosition(standingHeight);
         }
 
         // se parar, faz reset ao slide booost
         if (currentTotalSpeed <= CrouchSpeed || _input.move == Vector2.zero) {
+            isSliding = false;
             currentSlideBoost = 0.0f;
         }
 
