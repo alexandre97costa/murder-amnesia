@@ -60,6 +60,8 @@ public class InertiaMovement : MonoBehaviour
     public float SlideAngleMultiplier = 1.0f;
     [Tooltip("How much will the player slow down when sliding in flat surfaces.")]
     public float SlideDecayMultiplier = 1.0f;
+    [Tooltip("The height of the player when sliding, in meters.")]
+	public float SlidingHeight = 0.7f;
 
     [Space(10)]
 	[Header("Jump")]
@@ -91,13 +93,13 @@ public class InertiaMovement : MonoBehaviour
     public float WallRunDecayMultiplier = 3.0f;
 
     [Space(10)]
-    [Header("Player Grounded")]
-    [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
-    public bool Grounded = true;
+    [Header("Player isGrounded")]
+    [Tooltip("If the character is isGrounded or not. Not part of the CharacterController built in isGrounded check")]
+    public bool isGrounded = true;
     [Tooltip("Useful for rough ground")]
-    public float GroundedOffset = -0.14f;
-    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-    public float GroundedRadius = 0.22f;
+    public float isGroundedOffset = -0.14f;
+    [Tooltip("The radius of the isGrounded check. Should match the radius of the CharacterController")]
+    public float isGroundedRadius = 0.22f;
     [Tooltip("What layers the character uses as ground")]
     public LayerMask GroundLayers;
 
@@ -108,11 +110,18 @@ public class InertiaMovement : MonoBehaviour
     }
 
     // 🚀 inertia movement speed
+    [HideInInspector] public float currentTotalSpeed = 0.0f;
     [HideInInspector] public float currentRunningSpeed = 0.0f;
-    [HideInInspector] public float currentJumpBoost;
-    [HideInInspector] public float currentSlideBoost;
-    [HideInInspector] public float currentWallJumpBoost;
-    [HideInInspector] public float currentWallRunBoost;
+    [HideInInspector] public float currentJumpBoost = 0.0f;
+    [HideInInspector] public float currentSlideBoost = 0.0f;
+    [HideInInspector] public float currentWallJumpBoost = 0.0f;
+    [HideInInspector] public float currentWallRunBoost = 0.0f;
+
+    // player
+	private float _speed;
+	private float _rotationVelocity;
+	private float _verticalVelocity;
+	private float _terminalVelocity = 53.0f;
 
     // player
 	private float _speed;
@@ -121,6 +130,7 @@ public class InertiaMovement : MonoBehaviour
 	private float _terminalVelocity = 53.0f;
 
     // crouch
+    private bool isCrouched = false;
 	private float standingHeight;
 	private bool canUncrouch;
 
@@ -153,9 +163,9 @@ public class InertiaMovement : MonoBehaviour
 
 
     void Update() {
-        Move();
         Crouch();
         Jump();
+        Move();
     }
 
     void FixedUpdate() {
@@ -167,15 +177,27 @@ public class InertiaMovement : MonoBehaviour
         Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y);
         inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
 
-        if (_input.crouch && Grounded) {
-            _controller.Move(inputDirection.normalized * CrouchSpeed * Time.deltaTime);
+
+        if (isCrouched) {
+            currentTotalSpeed = CrouchSpeed;
+            ResetSpeedsAndBoosts();
         } else {
-            _controller.Move(inputDirection.normalized * Run() * Time.deltaTime);
+            currentTotalSpeed = Run() + Slide();
         }
 
+
+
+        _controller.Move(inputDirection.normalized * currentTotalSpeed * Time.deltaTime);
+        
+    }
+
+    void ResetSpeedsAndBoosts() {
+        currentRunningSpeed = 0.0f;
+        currentSlideBoost = 0.0f;
     }
 
     float Run() {
+        
         // se ainda nao estiver a correr, começa na velocidade minima
         if (currentRunningSpeed < InitialRunningSpeed) {
             currentRunningSpeed = InitialRunningSpeed;
@@ -190,7 +212,7 @@ public class InertiaMovement : MonoBehaviour
         }
 
         // se parar, muda a current running speed outra vez pra 0
-        if (_input.move == Vector2.zero || _input.crouch) {
+        if (_input.move == Vector2.zero) {
             currentRunningSpeed = 0.0f;
         }
 
@@ -220,18 +242,54 @@ public class InertiaMovement : MonoBehaviour
 
 		}
 
-    private void Crouch() {
-        Vector3 cam_pos = cameraPosition.transform.localPosition;
+        float Slide() {
+        // condições para fazer um slide
+        if (isGrounded && _input.crouch && currentTotalSpeed > CrouchSpeed) {
 
-        if (_input.crouch || (Grounded && !canUncrouch)) {
-            cameraPosition.transform.localPosition = new Vector3(cam_pos.x, CrouchHeight - 0.2f, cam_pos.z);
-            _controller.height = CrouchHeight;
-            _controller.center = new Vector3(0, CrouchHeight / 2f, 0);
+            Debug.Log("Sliding!");
+            
+            // muda a velocidade
+            if (currentSlideBoost == 0.0f) {
+                currentSlideBoost = SlideBoost;
+            }
+            if (currentSlideBoost >= SlideBoost && currentSlideBoost < MaxSlideBoost) {
+                currentSlideBoost += 0.01f;
+            }
+            if (currentSlideBoost >= MaxSlideBoost) {
+                currentSlideBoost = MaxSlideBoost;
+            }
+
+            // muda a posição da câmara
+            NewCameraPosition(SlidingHeight);
+        }
+
+        // se parar de fazer crouch e ainda estiver numa speed acima de crouch speed, sobe a câmara
+        if (!_input.crouch &&  currentTotalSpeed > CrouchSpeed) {
+            NewCameraPosition(standingHeight);
+        }
+
+        // se parar, faz reset ao slide booost
+        if (currentTotalSpeed <= CrouchSpeed || _input.move == Vector2.zero) {
+            currentSlideBoost = 0.0f;
+        }
+
+        return currentSlideBoost;
+    }
+
+    private void Crouch() {
+
+        if (
+            // se está no chão, premiu crouch, e está parado
+            (isGrounded && _input.crouch && currentTotalSpeed <= CrouchSpeed) || 
+            // Se está no chão, não se pode levantar (porque tem um collider em cima), e está a andar a crouch speed ou menos
+            (isGrounded && !canUncrouch && currentTotalSpeed <= CrouchSpeed)
+        ) {
+            isCrouched = true;
+            NewCameraPosition(CrouchHeight);
 
         } else {
-            cameraPosition.transform.localPosition = new Vector3(cam_pos.x, standingHeight - 0.2f, cam_pos.z);
-            _controller.height = standingHeight;
-            _controller.center = new Vector3(0, standingHeight / 2f, 0);
+            isCrouched = false;
+            NewCameraPosition(standingHeight);
         }
     }
 
@@ -256,5 +314,12 @@ public class InertiaMovement : MonoBehaviour
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * 2, Color.green);
             canUncrouch = true;
         }
+    }
+
+    void NewCameraPosition(float newHeight) {
+        Vector3 cam_pos = cameraPosition.transform.localPosition;
+        cameraPosition.transform.localPosition = new Vector3(cam_pos.x, newHeight - 0.2f, cam_pos.z);
+        _controller.height = newHeight;
+        _controller.center = new Vector3(0, newHeight / 2f, 0);
     }
 }

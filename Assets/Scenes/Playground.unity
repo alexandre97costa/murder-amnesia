@@ -342,7 +342,7 @@ MonoBehaviour:
   GelDuration: 10
   JumpBoost: 1.1
   MaxJumpBoost: 4
-  CrouchSpeed: 4
+  CrouchSpeed: 3
   CrouchHeight: 1
   SlideBoost: 1.1
   MaxSlideBoost: 4
