@@ -13,6 +13,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool crouch;
+		public bool wallrun;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -52,6 +53,12 @@ namespace StarterAssets
 			Debug.Log("OnCrouch: " + value);
 			CrouchInput(value.isPressed);
 		}
+
+		public void OnWallRun(InputValue value)
+		{
+			Debug.Log("OnWallRun: " + value);
+			WallRunInput(value.isPressed);
+		}
 #endif
 
 
@@ -79,7 +86,12 @@ namespace StarterAssets
 		{
 			crouch = newCrouchState;
 		}
-		
+
+		public void WallRunInput(bool newWallRunState)
+		{
+			wallrun = newWallRunState;
+		}
+
 		private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
