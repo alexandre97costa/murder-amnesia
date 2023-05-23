@@ -145,7 +145,7 @@ GameObject:
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -299,18 +299,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beebc7a94ace5814885c34615197d984, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunInitialSpeed: 6
-  RunMaxSpeed: 12
-  RunSpeedMultiplier: 0.1
-  JumpHeight: 4
+  RunInitialSpeed: 4
+  RunMaxSpeed: 8
+  RunSpeedMultiplier: 0.01
+  JumpHeight: 2.5
+  JumpCooldown: 1
   isJumping: 0
+  CanJump: 1
   grounded: 1
-  groundDrag: 7
+  groundDrag: 3
+  airDrag: 1
   GroundCheck: {fileID: 1271771089}
   AirMultiplier: 0.2
   CharacterLayer:
     serializedVersion: 2
     m_Bits: 256
+  TotalSpeed: 0
 --- !u!1 &542508511
 GameObject:
   m_ObjectHideFlags: 0
