@@ -124,7 +124,7 @@ public class InertiaMovement : MonoBehaviour
 	private float _speed;
 	private float _rotationVelocity;
 	private float _verticalVelocity;
-	private float _terminalVelocity = 53.0f;
+	// private float _terminalVelocity = 53.0f;
 
     // crouch
     [HideInInspector] public bool isCrouched = false;
@@ -132,9 +132,8 @@ public class InertiaMovement : MonoBehaviour
 	private bool canUncrouch;
 
     //jump
-    private bool isJumping = false;
     private Vector3 playerVelocity;
-    private float playerSpeed = 2.0f;
+    // private float playerSpeed = 2.0f;
     private float jumpHeight = 14.0f;
     private float gravityValue = -9.81f;
 

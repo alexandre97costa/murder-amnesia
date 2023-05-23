@@ -11,14 +11,14 @@ public class GetSpeedValue : MonoBehaviour
     public GameObject Crouching;
     public GameObject Player;
     private InertiaMovement PlayerMovement;
-    private CharacterController PlayerController;
+    private Rigidbody PlayerRigidBody;
     private float PlayerCurrentSpeed;
     private float PlayerVelocity;
     // Start is called before the first frame update
     void Start()
     {
         PlayerMovement = Player.GetComponent<InertiaMovement>();
-        PlayerController = Player.GetComponent<CharacterController>();
+        PlayerRigidBody = Player.GetComponent<Rigidbody>();
 
         Speed_text = Speed.GetComponent<TMP_Text>();
     }
@@ -27,7 +27,7 @@ public class GetSpeedValue : MonoBehaviour
     void LateUpdate()
     {
         PlayerCurrentSpeed = Mathf.Round(PlayerMovement.currentTotalSpeed * 100.0f) / 100.0f;
-        PlayerVelocity = Mathf.Round(PlayerController.velocity.magnitude * 100.0f) / 100.0f;
+        PlayerVelocity = Mathf.Round(PlayerRigidBody.velocity.magnitude * 100.0f) / 100.0f;
         Speed_text.text = "Speed Value: " + PlayerCurrentSpeed + "\nActual Velocity: " + PlayerVelocity;
 
         Sliding.SetActive(PlayerMovement.isSliding);
