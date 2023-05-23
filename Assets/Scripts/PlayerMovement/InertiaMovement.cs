@@ -82,7 +82,8 @@ public class InertiaMovement : MonoBehaviour
     public float WallJumpBoost = 1.1f;
     [Tooltip("The maximum boost obtainable by wall jumps.")]
     public float MaxWallJumpBoost = 4.0f;
-    private Vector3 WallJumpDirection = Vector3.zero;
+    private bool _canWallJump;
+    private Vector3 _WallJumpDirection = Vector3.zero;
 
     // 🏄‍♂️ Wall Run
     [Space(10)]
@@ -131,10 +132,10 @@ public class InertiaMovement : MonoBehaviour
 	private bool canUncrouch;
 
     //jump
+    private bool isJumping = false;
     private Vector3 playerVelocity;
-    private bool groundedPlayer;
     private float playerSpeed = 2.0f;
-    private float jumpHeight = 1.0f;
+    private float jumpHeight = 14.0f;
     private float gravityValue = -9.81f;
 
     // components
@@ -160,19 +161,19 @@ public class InertiaMovement : MonoBehaviour
 
     void Update() {
         Crouch();
-        Jump();
         Move();
-        WallJump();
     }
 
     void FixedUpdate() {
         UncrouchCheck();
+        IsGrounded();
+        // Jump();
     }
 
     void Move() {
         // direção do movimento
-        Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y);
-        inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
+        Vector3 inputDirection = Vector3.zero;
+        inputDirection = transform.right * _input.move.x + transform.up * Jump2() + transform.forward * _input.move.y;
 
 
         if (isCrouched) {
@@ -183,8 +184,10 @@ public class InertiaMovement : MonoBehaviour
         }
 
 
-
-        _controller.Move(inputDirection.normalized * currentTotalSpeed * Time.deltaTime);
+        // multiplica a velocidade no X e Y apenas
+        inputDirection = new Vector3(inputDirection.x * currentTotalSpeed, inputDirection.y, inputDirection.z * currentTotalSpeed);
+        Debug.DrawRay(_controller.center, inputDirection, Color.white);
+        _controller.Move(inputDirection* Time.deltaTime);
         
     }
 
@@ -216,22 +219,33 @@ public class InertiaMovement : MonoBehaviour
         return currentRunningSpeed;
     }
 
+    float Jump2() {
+        if (_input.jump) {
+            return jumpHeight ;
+        } else {
+            return gravityValue;
+        }
+    }
+
     private void Jump() {
 
-        groundedPlayer = _controller.isGrounded;
 
-        if (groundedPlayer && playerVelocity.y < 0)
-        {
+        if (IsGrounded() && playerVelocity.y <= 0) {
             playerVelocity.y = 0f;
+            _canWallJump = false;
         }
 
-        Vector3 move = new Vector3(_input.move.x, 0, _input.move.y);
-        _controller.Move(move * Time.deltaTime * playerSpeed);
+        // Vector3 move = new Vector3(_input.move.x, 0, _input.move.y);
+        // _controller.Move(move * Time.deltaTime * playerSpeed);
 
         
-        if (_input.jump && groundedPlayer)
-        {
+        if (_input.jump && IsGrounded()) {
+            _canWallJump = true;
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
+        }
+
+        if (_input.jump && _canWallJump) {
+            playerVelocity = _WallJumpDirection * new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
         }
 
         playerVelocity.y += gravityValue * Time.deltaTime;
@@ -315,30 +329,22 @@ public class InertiaMovement : MonoBehaviour
         }
     }
 
-    private void WallJump() {
-        // 1. deteta colisoes com paredes
-        // 2. apanha a normal das paredes
-        // 3. ao saltar, dar impulso pra cima e na direção da normal.
-
-        if ((_controller.collisionFlags & CollisionFlags.Sides) != 0) {
-            // Debug.Log("Touching sides!");
-            
-        }
-    }
 
     void OnControllerColliderHit(ControllerColliderHit hit) {
 
-        if (hit.moveDirection.y >= -0.3) {
-            // Debug.Log("Collision! Normal: " + hit.normal.ToString("F3"));
-            WallJumpDirection = hit.normal;
-
-            if (_input.jump)
-            {
-                playerVelocity += WallJumpDirection;
-            }
+        if (IsGrounded() && !hit.transform.CompareTag("Wall")) return;
+    
+        Debug.DrawRay(hit.point,hit.normal, Color.blue);
+        
+        _canWallJump = true;
+        _WallJumpDirection = hit.normal;
 
 
-        }
+
+        // if (hit.moveDirection.y >= -0.3) {
+        //     // Debug.Log("Collision! Normal: " + hit.normal.ToString("F3"));
+        //     WallJumpDirection = hit.normal;
+        // }
     }
 
 
@@ -347,5 +353,10 @@ public class InertiaMovement : MonoBehaviour
         cameraPosition.transform.localPosition = new Vector3(cam_pos.x, newHeight - 0.2f, cam_pos.z);
         _controller.height = newHeight;
         _controller.center = new Vector3(0, newHeight / 2f, 0);
+    }
+
+    bool IsGrounded() {
+        isGrounded = ((_controller.collisionFlags & CollisionFlags.Below) != 0);
+        return isGrounded;
     }
 }
