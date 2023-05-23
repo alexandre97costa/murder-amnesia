@@ -265,7 +265,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.25
+  m_Radius: 0.31
   m_Height: 1.9
   m_Direction: 1
   m_Center: {x: 0, y: 0.95, z: 0}
@@ -302,9 +302,12 @@ MonoBehaviour:
   RunInitialSpeed: 6
   RunMaxSpeed: 12
   RunSpeedMultiplier: 0.1
+  JumpHeight: 4
+  isJumping: 0
   grounded: 1
-  groundDrag: 5
+  groundDrag: 7
   GroundCheck: {fileID: 1271771089}
+  AirMultiplier: 0.2
   CharacterLayer:
     serializedVersion: 2
     m_Bits: 256
