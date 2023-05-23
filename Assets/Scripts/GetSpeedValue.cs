@@ -10,14 +10,14 @@ public class GetSpeedValue : MonoBehaviour
     public GameObject Sliding;
     public GameObject Crouching;
     public GameObject Player;
-    private Inertia_RigidBody PlayerMovement;
+    private PlayerMovement PlayerMovement;
     private Rigidbody PlayerRigidBody;
     private float PlayerCurrentSpeed;
     private float PlayerVelocity;
     // Start is called before the first frame update
     void Start()
     {
-        PlayerMovement = Player.GetComponent<Inertia_RigidBody>();
+        PlayerMovement = Player.GetComponent<PlayerMovement>();
         PlayerRigidBody = Player.GetComponent<Rigidbody>();
 
         Speed_text = Speed.GetComponent<TMP_Text>();
