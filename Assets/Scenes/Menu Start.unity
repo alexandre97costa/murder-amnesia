@@ -6922,7 +6922,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e548dd501413124db08631a8d56b457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nivelJogo: Playground
+  nivelJogo: DemoTutorial
   painelMenuPrincipal: {fileID: 796981164}
   painelDefinicoes: {fileID: 1246390130}
   painelCreditos: {fileID: 1227988237}
