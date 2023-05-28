@@ -24,6 +24,16 @@ public class PlayerMovement : MonoBehaviour {
     private float CurrentJumpBoost = 0;
 
     [Space(10)]
+    [Header("Crouch")]
+    [Tooltip("Crouch speed of the character in m/s. Overrides all other speeds.")]
+    public float CrouchSpeed = 4.0f;
+    [Tooltip("The height of the player when crouched, in meters.")]
+    public float CrouchHeight = 1.0f;
+    public bool isCrouched = false;
+    private float standingHeight;
+    public bool canUncrouch;
+
+    [Space(10)]
     [Header("Other")]
     public bool grounded = true;
     public float groundDrag = 1f;
@@ -44,21 +54,24 @@ public class PlayerMovement : MonoBehaviour {
     private StarterAssetsInputs _input;
     private Rigidbody _rb;
     private CapsuleCollider _collider;
-    
+    private GameObject _camera;
 
 
     void Start() {
         _input = GetComponent<StarterAssetsInputs>();
         _rb = GetComponent<Rigidbody>();
         _collider = GetComponent<CapsuleCollider>();
+        _camera = transform.Find("CameraPosition").gameObject;
 
+        standingHeight = _collider.height;
     }
 
     void Update() {
-        
     }
 
     void FixedUpdate() {
+        UncrouchCheck();
+
         // ground check
         grounded = IsGrounded();
 
@@ -69,8 +82,9 @@ public class PlayerMovement : MonoBehaviour {
             _rb.drag = airDrag;
         }
 
+        Crouch();
         Jump();
-        Move(); // deixar o move sempre pra ultimo pls
+        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3
     }
 
     void LateUpdate() {
@@ -79,6 +93,7 @@ public class PlayerMovement : MonoBehaviour {
 
     void Move() {
         MovingDirection = transform.forward * _input.move.y + transform.right * _input.move.x;
+
 
         if(MovingDirection.magnitude <= 0.1f) {
             CurrentRunningSpeed = 0f;
@@ -115,6 +130,56 @@ public class PlayerMovement : MonoBehaviour {
     }
     private void ResetJump() {
         CanJump = true;
+    }
+
+    void Crouch()
+    {
+        // se está no chão, premiu crouch, e está parado
+        if (
+            (grounded && _input.crouch && TotalSpeed <= CrouchSpeed) ||
+        // Se está no chão, não se pode levantar (porque tem um collider em cima), e está a andar a crouch speed ou menos
+            (grounded && !canUncrouch && TotalSpeed <= CrouchSpeed))
+        {
+            isCrouched = true;
+            NewCameraPosition(CrouchHeight);
+
+        } else if (!_input.crouch && canUncrouch)
+        {
+            isCrouched = false;
+            NewCameraPosition(standingHeight);
+        }
+    }
+
+    private void UncrouchCheck()
+    {
+        // https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
+
+        // Bit shift the index of the layer (8) to get a bit mask
+        int layerMask = 1 << 8;
+        // This would cast rays only against colliders in layer 8.
+        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+        layerMask = ~layerMask;
+
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up), out hit, 2, layerMask))
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * hit.distance, Color.red);
+            canUncrouch = false;
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * 2, Color.green);
+            canUncrouch = true;
+        }
+    }
+
+    void NewCameraPosition(float newHeight)
+    {
+        Vector3 cam_pos = _camera.transform.localPosition;
+        _camera.transform.localPosition = new Vector3(cam_pos.x, newHeight - 0.2f, cam_pos.z);
+        _collider.height = newHeight;
+        _collider.center = new Vector3(0, newHeight / 2f, 0);
     }
 
     bool IsGrounded() {

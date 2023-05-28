@@ -7,7 +7,7 @@ public class MoventsPlayer : MonoBehaviour
 {
     private AnimationsControllers animationsControllers;
     private StarterAssetsInputs keyInputs;
-    private InertiaMovement inertiaMovement;
+    private PlayerMovement playerMovement;
 
     [SerializeField] private float velocitySlide = 7;
 
@@ -20,7 +20,7 @@ public class MoventsPlayer : MonoBehaviour
         // Inicialize a vari�vel animationsControllers aqui
         animationsControllers = GetComponent<AnimationsControllers>();
         keyInputs = GetComponent<StarterAssetsInputs>();
-        inertiaMovement = GetComponent<InertiaMovement>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     /*------------HORIZONTAL------------*/
@@ -38,7 +38,7 @@ public class MoventsPlayer : MonoBehaviour
     void Update()
     {
         //Slide & Crounch
-        if(keyInputs.crouch) { AnimationCrouch(); return; }
+        if(playerMovement.isCrouched) { AnimationCrouch(); return; }
 
         //Air
         if(keyInputs.jump) { AnimationJump(); return; }
@@ -64,7 +64,7 @@ public class MoventsPlayer : MonoBehaviour
     private void AnimationCrouch()
     {
         //Verificar a velocidade
-        if (keyInputs.move.y.Equals(1) && inertiaMovement.currentRunningSpeed > velocitySlide) { animationsControllers.SlideAction(); return; }
+        if (keyInputs.move.y.Equals(1) && playerMovement.TotalSpeed > velocitySlide) { animationsControllers.SlideAction(); return; }
 
         if (keyInputs.move.x.Equals(-1) && keyInputs.move.y.Equals(1)) { animationsControllers.CrounchLeftAction(); return; }
 
