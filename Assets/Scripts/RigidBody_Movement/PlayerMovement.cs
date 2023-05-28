@@ -34,6 +34,14 @@ public class PlayerMovement : MonoBehaviour {
     public bool canUncrouch;
 
     [Space(10)]
+    [Header("Gel")]
+    public float GelDuration = 10f;
+    public float MaxGelBoost = 5f;
+    public bool isGelActivated = false;
+    private float GelTimer = 0f;
+
+
+    [Space(10)]
     [Header("Other")]
     public bool grounded = true;
     public float groundDrag = 1f;
@@ -67,6 +75,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void Update() {
+        CheckGel(); //para maior precisao nos segundos
     }
 
     void FixedUpdate() {
@@ -84,7 +93,7 @@ public class PlayerMovement : MonoBehaviour {
 
         Crouch();
         Jump();
-        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3
+        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 //mas eu queria meter por baixo :(
     }
 
     void LateUpdate() {
@@ -113,6 +122,11 @@ public class PlayerMovement : MonoBehaviour {
         // aqui vamos metendo os boosts das outras mecanicas
         TotalSpeed = CurrentRunningSpeed + CurrentJumpBoost;
 
+        if (isGelActivated)
+        {
+            TotalSpeed += MaxGelBoost; //nao tenho a certeza de fazer isto assim mas funfa
+        }
+
         _rb.AddForce(MovingDirection * TotalSpeed * (grounded ? 1f : AirMultiplier) * 10f, ForceMode.Force);
 
     }
@@ -134,10 +148,10 @@ public class PlayerMovement : MonoBehaviour {
 
     void Crouch()
     {
-        // se está no chão, premiu crouch, e está parado
+        // se estï¿½ no chï¿½o, premiu crouch, e estï¿½ parado
         if (
             (grounded && _input.crouch && TotalSpeed <= CrouchSpeed) ||
-        // Se está no chão, não se pode levantar (porque tem um collider em cima), e está a andar a crouch speed ou menos
+        // Se estï¿½ no chï¿½o, nï¿½o se pode levantar (porque tem um collider em cima), e estï¿½ a andar a crouch speed ou menos
             (grounded && !canUncrouch && TotalSpeed <= CrouchSpeed))
         {
             isCrouched = true;
@@ -173,6 +187,44 @@ public class PlayerMovement : MonoBehaviour {
             canUncrouch = true;
         }
     }
+
+    private void CheckGel()
+    {
+        if(isGelActivated)
+        {
+            GelTimer -= Time.deltaTime;
+
+            if(GelTimer <= 0)
+            {
+                ActivateGel(false);
+            }
+        }
+    }
+
+    private void ActivateGel(bool activate)
+    {
+        if(activate)
+        {
+            isGelActivated = true;
+            GelTimer = GelDuration;
+        }
+        else
+        {
+            isGelActivated = false;
+            GelTimer = 0f;
+        }
+    }
+
+    private void OnTriggerEnter(Collider gel)
+    {
+        if (gel.CompareTag("Gel"))
+        {
+            ActivateGel(true);
+            Destroy(gel.gameObject);
+        }
+    }
+
+
 
     void NewCameraPosition(float newHeight)
     {
