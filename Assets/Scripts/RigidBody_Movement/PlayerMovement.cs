@@ -39,6 +39,9 @@ public class PlayerMovement : MonoBehaviour {
     public float MaxGelBoost = 5f;
     public bool isGelActivated = false;
     private float GelTimer = 0f;
+    private bool isRespawning = false;
+    public GameObject gelPrefab;
+    public Transform gelSpawnPoint;
 
 
     [Space(10)]
@@ -93,7 +96,7 @@ public class PlayerMovement : MonoBehaviour {
 
         Crouch();
         Jump();
-        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 //mas eu queria meter por baixo :(
+        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 // mas eu queria meter por baixo :(
     }
 
     void LateUpdate() {
@@ -198,6 +201,12 @@ public class PlayerMovement : MonoBehaviour {
             {
                 ActivateGel(false);
             }
+            
+            if(GelTimer <= GelDuration / 2 && isRespawning)
+            {
+                RespawnGel();
+                // Debug.Log("SPAWNEI");
+            }
         }
     }
 
@@ -207,6 +216,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             isGelActivated = true;
             GelTimer = GelDuration;
+            isRespawning = true;
         }
         else
         {
@@ -217,14 +227,18 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnTriggerEnter(Collider gel)
     {
-        if (gel.CompareTag("Gel"))
+        if(gel.CompareTag("Gel"))
         {
             ActivateGel(true);
             Destroy(gel.gameObject);
         }
     }
 
-
+    private void RespawnGel()
+    {
+        isRespawning = false;
+        Instantiate(gelPrefab, gelSpawnPoint.position, gelSpawnPoint.rotation);
+    }
 
     void NewCameraPosition(float newHeight)
     {

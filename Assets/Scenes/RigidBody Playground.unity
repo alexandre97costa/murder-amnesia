@@ -318,6 +318,10 @@ MonoBehaviour:
   GelDuration: 10
   MaxGelBoost: 5
   isGelActivated: 0
+  gelPrefab: {fileID: 2757868613380162441, guid: 3f20963c3a6ebb54fa4e89e5edc2a021,
+    type: 3}
+  gelSpawnPoint: {fileID: 2757868613380162437, guid: 3f20963c3a6ebb54fa4e89e5edc2a021,
+    type: 3}
   grounded: 1
   groundDrag: 3
   airDrag: 1
@@ -964,7 +968,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 882556727}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
