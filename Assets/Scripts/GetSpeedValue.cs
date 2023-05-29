@@ -7,8 +7,6 @@ public class GetSpeedValue : MonoBehaviour
 {
     public GameObject Speed;
     private TMP_Text Speed_text;
-    public GameObject Sliding;
-    public GameObject Crouching;
     public GameObject Player;
     private PlayerMovement PlayerMovement;
     private Rigidbody PlayerRigidBody;
