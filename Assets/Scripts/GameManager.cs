@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         PauseMenu.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked; 
+        Cursor.visible = false;
     }
 
     void Update()
