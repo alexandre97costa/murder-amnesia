@@ -17,12 +17,22 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector] public float PlayerRotation;
     private StarterAssetsInputs _input;
 
+    private GameManager gameManager;
+    private Rigidbody _rb;
+    private float PlayerSpeed;
+
     // Start is called before the first frame update
     void Start() {
         _input = GetComponent<StarterAssetsInputs>();
+        _rb = GetComponent<Rigidbody>();
+        gameManager = new GameManager();
     }
 
     void Update() {
+        PlayerSpeed = new Vector3(_rb.velocity.z, 0, _rb.velocity.z).magnitude;
+        PlayerSpeed = Mathf.Round(PlayerSpeed * 100) / 100;
+        Debug.Log("PlayerSpeed: " + PlayerSpeed);
+
         if (_input.jump) {
             Fov(80f);
         }
