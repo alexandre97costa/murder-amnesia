@@ -9,8 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Playground.unity
     guid: 707acc8dffb72b144bb1ffbe1c965f3d
   - enabled: 1
-    path: Assets/Scenes/RigidBody Playground.unity
-    guid: 5cf32423bd81bc34b99b7824f97d10bf
+    path: Assets/Scenes/MenuStart.unity
+    guid: 5f0db25e5d3b3934a8b370014120150c
+  - enabled: 1
+    path: Assets/Scenes/DemoTutorial.unity
+    guid: c14bfdb7f18ef3b4582b67ebe260b00d
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
       type: 2}
