@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using StarterAssets;
 using UnityEngine;
 
-public class MoventsPlayer : MonoBehaviour
+public class AnimationsMovementsPlayer : MonoBehaviour
 {
     private AnimationsControllers animationsControllers;
     private StarterAssetsInputs keyInputs;
@@ -41,7 +41,7 @@ public class MoventsPlayer : MonoBehaviour
         if(playerMovement.isCrouched) { AnimationCrouch(); return; }
 
         //Air
-        if(keyInputs.jump) { AnimationJump(); return; }
+        if(playerMovement.isJumping) { AnimationJump(); return; }
 
         //Sprints
         AnimationSprint();

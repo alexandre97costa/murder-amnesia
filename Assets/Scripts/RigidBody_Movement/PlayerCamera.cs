@@ -40,12 +40,10 @@ public class PlayerCamera : MonoBehaviour
 
     // Update is called once per frame
     void LateUpdate() {
-        if (!gameManager.GetIsPaused())
-            PlayerCameraRotation();
+         PlayerCameraRotation();
     }
 
     private void PlayerCameraRotation() {
-        Debug.Log(!gameManager.GetIsPaused());
         CameraPitch += _input.look.y * LookSensivity;
         CameraPitch = Mathf.Clamp(CameraPitch, -90f, 90f);
         PlayerRotation = _input.look.x * LookSensivity;

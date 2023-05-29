@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour {
     public float JumpHeight = 3f;
     public float JumpCooldown = 1f;
     public bool isJumping = false;
+    public bool isFalling = false;
     public bool CanJump = true;
     public float JumpBoost = 0.4f;
     public float MaxJumpBoost = 3.2f;
@@ -161,6 +162,16 @@ public class PlayerMovement : MonoBehaviour {
             Invoke(nameof(ResetJump), JumpCooldown);
             _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
             _rb.AddForce(transform.up * JumpHeight * 3f, ForceMode.Impulse);
+
+        }
+
+        if(isJumping)
+        {
+            if(Mathf.Round(_rb.velocity.y) <= 0 )
+            {
+                Debug.Log("Comecei a descer");
+                isFalling = true;
+            } else { isFalling = false; }
         }
     }
     private void ResetJump() { CanJump = true; }
