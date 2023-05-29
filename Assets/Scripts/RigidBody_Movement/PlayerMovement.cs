@@ -98,7 +98,7 @@ public class PlayerMovement : MonoBehaviour {
         Crouch();
         Jump();
         WallJump();
-        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 // mas eu queria meter por baixo :( // faz crounch no meu rigidbody <3
+        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 // mas eu queria meter por baixo :( // faz crounch no meu rigidbody <3 // ulalah
     }
 
     void LateUpdate() {
@@ -126,6 +126,11 @@ public class PlayerMovement : MonoBehaviour {
         if (isGelActivated)
         {
             TotalSpeed += MaxGelBoost; //nao tenho a certeza de fazer isto assim mas funfa
+        }
+
+        if(isCrouched)
+        {
+            TotalSpeed = CrouchSpeed;
         }
 
         _rb.AddForce(MovingDirection() * TotalSpeed * (grounded ? 1f : AirMultiplier) * 10f, ForceMode.Force);
@@ -162,9 +167,9 @@ public class PlayerMovement : MonoBehaviour {
     {
         // se est� no ch�o, premiu crouch, e est� parado
         if (
-            (grounded && _input.crouch && TotalSpeed <= CrouchSpeed) ||
+            (grounded && _input.crouch /*&& TotalSpeed <= CrouchSpeed*/) ||
         // Se est� no ch�o, n�o se pode levantar (porque tem um collider em cima), e est� a andar a crouch speed ou menos
-            (grounded && !canUncrouch && TotalSpeed <= CrouchSpeed))
+            (grounded && !canUncrouch /*&& TotalSpeed <= CrouchSpeed*/))
         {
             isCrouched = true;
             NewCameraPosition(CrouchHeight);
