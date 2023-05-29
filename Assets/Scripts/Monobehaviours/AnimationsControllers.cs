@@ -54,4 +54,9 @@ public class AnimationsControllers : MonoBehaviour
     public void CrounchLeftAction() { Set(18); animator.SetBool("isAction", true); }
 
     public void CrounchRightAction() { Set(19); animator.SetBool("isAction", true); }
+
+    public void JumpMidAirAction() { Set(20); animator.SetBool("isAction", true); }
+    
+    public void LandAction() { Set(21); animator.SetBool("isAction", true); }
+
 }

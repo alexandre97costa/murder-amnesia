@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour {
     public float JumpCooldown = 1f;
     public bool isJumping = false;
     public bool isFalling = false;
+    public bool isMidAir = false;
+    public bool isLanding = false;
     public bool CanJump = true;
     public float JumpBoost = 0.4f;
     public float MaxJumpBoost = 3.2f;
@@ -166,8 +168,16 @@ public class PlayerMovement : MonoBehaviour {
 
         if(isJumping)
         {
-            if(Mathf.Round(_rb.velocity.y) <= 0 ) { isFalling = true; }
+            if(Mathf.Round(_rb.velocity.y) > -1) { isMidAir = true; }
+            if(Mathf.Round(_rb.velocity.y) <= -1 ) { isFalling = true; isMidAir = false; }
+
+            Debug.Log(_rb.velocity.y);
         } else { isFalling = false; }
+
+        if(!isFalling && isJumping && !isMidAir && CanJump)
+        {
+            isLanding = true;
+        } else { isLanding = false; }
     }
     private void ResetJump() { CanJump = true; }
 

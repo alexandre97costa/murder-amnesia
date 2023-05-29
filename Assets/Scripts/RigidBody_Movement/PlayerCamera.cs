@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class PlayerCamera : MonoBehaviour
 {
 
     public float LookSensivity = 1f;
     public GameObject CameraPosition;
-    public Camera MainCamera;
+    public GameObject PlayerFollowCamera;
+    private CinemachineVirtualCamera CinemachineCam;
     [Tooltip("Draw a debug ray to show where the player is looking.")]
     public bool DebugRay = false;
 
@@ -23,6 +25,7 @@ public class PlayerCamera : MonoBehaviour
     void Start() {
         _input = GetComponent<StarterAssetsInputs>();
         _rb = GetComponent<Rigidbody>();
+        CinemachineCam = PlayerFollowCamera.GetComponent<CinemachineVirtualCamera>();
     }
 
     void Update() {
@@ -30,7 +33,7 @@ public class PlayerCamera : MonoBehaviour
         PlayerSpeed = Mathf.Round(PlayerSpeed * 100) / 100;
         // Debug.Log("PlayerSpeed: " + PlayerSpeed);
 
-        Fov(60 + PlayerSpeed);
+        Fov(60f + (PlayerSpeed * 0.7f));
     }
 
     // Update is called once per frame
@@ -40,7 +43,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void PlayerCameraRotation() {
         CameraPitch += _input.look.y * LookSensivity;
-        CameraPitch = Mathf.Clamp(CameraPitch, -90f, 75f);
+        CameraPitch = Mathf.Clamp(CameraPitch, -90f, 70f);
         PlayerRotation = _input.look.x * LookSensivity;
 
 
@@ -75,7 +78,7 @@ public class PlayerCamera : MonoBehaviour
         // opcional: 
         // https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
 
-        MainCamera.fieldOfView = newFov;
+        CinemachineCam.m_Lens.FieldOfView = newFov;
     }
     public void ResetFov() {
         Fov(60.0f);
