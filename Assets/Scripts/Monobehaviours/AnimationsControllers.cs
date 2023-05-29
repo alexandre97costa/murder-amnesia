@@ -35,7 +35,7 @@ public class AnimationsControllers : MonoBehaviour
 
     public void RunRightBackAction() { Set(4); animator.SetBool("isAction", true); EnableStepsSound(); }
 
-    public void RunAction() { Set(5); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void RunAction() { EnableStepsSound(); Set(5); animator.SetBool("isAction", true); }
 
     public void RunLeftAction() { Set(6); animator.SetBool("isAction", true); EnableStepsSound(); }
 
@@ -69,9 +69,12 @@ public class AnimationsControllers : MonoBehaviour
 
     private void EnableStepsSound()
     {
-        Debug.Log("Ativeis");
-        footSteps.enabled = true;
-        footSteps.Play();
+        Debug.Log("Ativei");
+        if(footSteps.enabled == false)
+        {
+            footSteps.enabled = true;
+            footSteps.Play();
+        }
     }
 
     private void DisableStepsSound()

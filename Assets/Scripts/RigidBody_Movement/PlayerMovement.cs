@@ -171,7 +171,6 @@ public class PlayerMovement : MonoBehaviour {
             if(Mathf.Round(_rb.velocity.y) > -1) { isMidAir = true; }
             if(Mathf.Round(_rb.velocity.y) <= -1 ) { isFalling = true; isMidAir = false; }
 
-            Debug.Log(_rb.velocity.y);
         } else { isFalling = false; }
 
         if(!isFalling && isJumping && !isMidAir && CanJump)
