@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
-[RequireComponent(typeof(PlayerInput))]
 public class PlayerCamera : MonoBehaviour
 {
 
     public float LookSensivity = 1f;
     public GameObject CameraPosition;
-    public Camera MainCamera;
+    public GameObject PlayerFollowCamera;
+    private CinemachineVirtualCamera CinemachineCam;
     [Tooltip("Draw a debug ray to show where the player is looking.")]
     public bool DebugRay = false;
 
@@ -17,7 +18,6 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector] public float PlayerRotation;
     private StarterAssetsInputs _input;
 
-    private GameManager gameManager;
     private Rigidbody _rb;
     private float PlayerSpeed;
 
@@ -25,17 +25,15 @@ public class PlayerCamera : MonoBehaviour
     void Start() {
         _input = GetComponent<StarterAssetsInputs>();
         _rb = GetComponent<Rigidbody>();
-        gameManager = new GameManager();
+        CinemachineCam = PlayerFollowCamera.GetComponent<CinemachineVirtualCamera>();
     }
 
     void Update() {
         PlayerSpeed = new Vector3(_rb.velocity.z, 0, _rb.velocity.z).magnitude;
         PlayerSpeed = Mathf.Round(PlayerSpeed * 100) / 100;
-        //Debug.Log("PlayerSpeed: " + PlayerSpeed);
+        // Debug.Log("PlayerSpeed: " + PlayerSpeed);
 
-        if (_input.jump) {
-            Fov(80f);
-        }
+        Fov(60f + (PlayerSpeed * 0.7f));
     }
 
     // Update is called once per frame
@@ -45,7 +43,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void PlayerCameraRotation() {
         CameraPitch += _input.look.y * LookSensivity;
-        CameraPitch = Mathf.Clamp(CameraPitch, -90f, 90f);
+        CameraPitch = Mathf.Clamp(CameraPitch, -90f, 70f);
         PlayerRotation = _input.look.x * LookSensivity;
 
 
@@ -80,7 +78,7 @@ public class PlayerCamera : MonoBehaviour
         // opcional: 
         // https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
 
-        MainCamera.fieldOfView = newFov;
+        CinemachineCam.m_Lens.FieldOfView = newFov;
     }
     public void ResetFov() {
         Fov(60.0f);
