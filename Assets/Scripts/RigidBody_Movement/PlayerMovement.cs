@@ -24,6 +24,10 @@ public class PlayerMovement : MonoBehaviour {
     private float CurrentJumpBoost = 0;
 
     [Space(10)]
+    [Header("Wall Jump")]
+    public bool canWallJump = false;
+
+    [Space(10)]
     [Header("Crouch")]
     [Tooltip("Crouch speed of the character in m/s. Overrides all other speeds.")]
     public float CrouchSpeed = 4.0f;
@@ -43,7 +47,6 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject gelPrefab;
     public Transform gelSpawnPoint;
 
-
     [Space(10)]
     [Header("Other")]
     public bool grounded = true;
@@ -58,7 +61,6 @@ public class PlayerMovement : MonoBehaviour {
 
     // Helpers
     [Space(10)]
-    private Vector3 MovingDirection;
     public float TotalSpeed;
 
     // Components
@@ -83,43 +85,35 @@ public class PlayerMovement : MonoBehaviour {
 
     void FixedUpdate() {
         UncrouchCheck();
+        
 
-        // ground check
-        grounded = IsGrounded();
+        
 
-        if (grounded) {
-            isJumping = false;
-            _rb.drag = groundDrag;
-        } else {
-            _rb.drag = airDrag;
-        }
-
+        Run();
         Crouch();
         Jump();
-        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 // mas eu queria meter por baixo :(
+        WallJump();
+        Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 // mas eu queria meter por baixo :( // faz crounch no meu rigidbody <3
     }
 
     void LateUpdate() {
+        canWallJump = CanWallJump();
+        grounded = IsGrounded();
+        isJumping = !IsGrounded();
 
+        _rb.drag = grounded ? groundDrag : airDrag;
+    }
+
+    Vector3 MovingDirection() {
+        return (transform.forward * _input.move.y + transform.right * _input.move.x);
     }
 
     void Move() {
-        MovingDirection = transform.forward * _input.move.y + transform.right * _input.move.x;
 
-
-        if(MovingDirection.magnitude <= 0.1f) {
+        // reset aos boosts e velocidades se o marmelo estiver parado
+        if(MovingDirection().magnitude <= 0.1f) {
             CurrentRunningSpeed = 0f;
             CurrentJumpBoost = 0f;
-        } else {
-            if(CurrentRunningSpeed < RunInitialSpeed) {
-                CurrentRunningSpeed = RunInitialSpeed;
-            }
-            if(CurrentRunningSpeed >= RunInitialSpeed && CurrentRunningSpeed < RunMaxSpeed) {
-                CurrentRunningSpeed += RunSpeedMultiplier;
-            }
-            if(CurrentRunningSpeed >= RunMaxSpeed) {
-                CurrentRunningSpeed = RunMaxSpeed;
-            }
         }
 
         // aqui vamos metendo os boosts das outras mecanicas
@@ -130,14 +124,27 @@ public class PlayerMovement : MonoBehaviour {
             TotalSpeed += MaxGelBoost; //nao tenho a certeza de fazer isto assim mas funfa
         }
 
-        _rb.AddForce(MovingDirection * TotalSpeed * (grounded ? 1f : AirMultiplier) * 10f, ForceMode.Force);
+        _rb.AddForce(MovingDirection() * TotalSpeed * (grounded ? 1f : AirMultiplier) * 10f, ForceMode.Force);
 
+    }
+
+    private void Run() {
+        if (MovingDirection().magnitude > 0.1f) {
+            if(CurrentRunningSpeed < RunInitialSpeed) {
+                CurrentRunningSpeed = RunInitialSpeed;
+            }
+            if(CurrentRunningSpeed >= RunInitialSpeed && CurrentRunningSpeed < RunMaxSpeed) {
+                CurrentRunningSpeed += RunSpeedMultiplier;
+            }
+            if(CurrentRunningSpeed >= RunMaxSpeed) {
+                CurrentRunningSpeed = RunMaxSpeed;
+            }
+        }
     }
 
     private void Jump()
     {
-        if (_input.jump && grounded && !isJumping && CanJump) {
-            isJumping = true;
+        if (_input.jump && grounded && CanJump) {
             CanJump = false;
             CurrentJumpBoost = (CurrentJumpBoost >= MaxJumpBoost) ? MaxJumpBoost : (CurrentJumpBoost + JumpBoost);
             Invoke(nameof(ResetJump), JumpCooldown);
@@ -145,9 +152,7 @@ public class PlayerMovement : MonoBehaviour {
             _rb.AddForce(transform.up * JumpHeight * 3f, ForceMode.Impulse);
         }
     }
-    private void ResetJump() {
-        CanJump = true;
-    }
+    private void ResetJump() { CanJump = true; }
 
     void Crouch()
     {
@@ -238,6 +243,37 @@ public class PlayerMovement : MonoBehaviour {
     {
         isRespawning = false;
         Instantiate(gelPrefab, gelSpawnPoint.position, gelSpawnPoint.rotation);
+    }
+
+    private void WallJump() {
+    }
+
+    private bool CanWallJump() {
+        // https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
+        // Bit shift the index of the layer (8) to get a bit mask
+        int layerMask = 1 << 8;
+        // This would cast rays only against colliders in layer 8.
+        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+        layerMask = ~layerMask;
+
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+
+        // https://docs.unity3d.com/ScriptReference/Physics.SphereCast.html
+        if (Physics.SphereCast(
+            transform.position,                         // origin
+            _collider.radius + 0.2f,                    // radius
+            transform.TransformDirection(Vector3.up),   // direction
+            out hit,                                    // hit info
+            1f,                                         // max distance
+            layerMask))                                 // layer mask (tudo menos o player, que está na layer 8)
+        {
+            if (hit.collider.CompareTag("Wall")) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     void NewCameraPosition(float newHeight)
