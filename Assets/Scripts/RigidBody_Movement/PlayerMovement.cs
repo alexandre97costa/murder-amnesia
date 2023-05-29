@@ -160,17 +160,12 @@ public class PlayerMovement : MonoBehaviour {
             Invoke(nameof(ResetJump), JumpCooldown);
             _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
             _rb.AddForce(transform.up * JumpHeight * 3f, ForceMode.Impulse);
-
         }
 
         if(isJumping)
         {
-            if(Mathf.Round(_rb.velocity.y) <= 0 )
-            {
-                Debug.Log("Comecei a descer");
-                isFalling = true;
-            } else { isFalling = false; }
-        }
+            if(Mathf.Round(_rb.velocity.y) <= 0 ) { isFalling = true; }
+        } else { isFalling = false; }
     }
     private void ResetJump() { CanJump = true; }
 

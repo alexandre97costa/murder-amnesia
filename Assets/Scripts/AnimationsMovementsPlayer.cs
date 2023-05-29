@@ -41,6 +41,8 @@ public class AnimationsMovementsPlayer : MonoBehaviour
         if(playerMovement.isCrouched) { AnimationCrouch(); return; }
 
         //Air
+        if(playerMovement.isFalling) { AnimationFalling(); return; }
+
         if(playerMovement.isJumping) { AnimationJump(); return; }
 
         //Sprints
@@ -77,6 +79,11 @@ public class AnimationsMovementsPlayer : MonoBehaviour
         if (keyInputs.move.x.Equals(1)) { animationsControllers.CrounchRightAction(); return; }
 
         animationsControllers.CrounchAction(); return;
+    }
+
+    private void AnimationFalling()
+    {
+        animationsControllers.FallAction();
     }
 
     private void AnimationJump()
