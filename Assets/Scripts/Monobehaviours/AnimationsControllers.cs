@@ -69,12 +69,14 @@ public class AnimationsControllers : MonoBehaviour
 
     private void EnableStepsSound()
     {
+        Debug.Log("Ativeis");
         footSteps.enabled = true;
         footSteps.Play();
     }
 
     private void DisableStepsSound()
     {
+        Debug.Log("Desativei");
         footSteps.enabled = false;
         footSteps.Stop();
     }
