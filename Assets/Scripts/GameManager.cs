@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject PauseMenu;
 
+    public PlayerCamera playerCamera;
+
     private void Start()
     {
         PauseMenu.gameObject.SetActive(false);
@@ -28,12 +30,14 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         PauseMenu.gameObject.SetActive(true);
+        playerCamera.enabled = false;
     }
 
     private void ResumeGame()
     {
         Time.timeScale = 1;
         PauseMenu.gameObject.SetActive(false);
+        playerCamera.enabled = true;
     }
 
     public bool GetIsPaused()

@@ -17,12 +17,9 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector] public float PlayerRotation;
     private StarterAssetsInputs _input;
 
-    private GameManager gameManager;
-
     // Start is called before the first frame update
     void Start() {
         _input = GetComponent<StarterAssetsInputs>();
-        gameManager = new GameManager();
     }
 
     void Update() {
@@ -33,12 +30,10 @@ public class PlayerCamera : MonoBehaviour
 
     // Update is called once per frame
     void LateUpdate() {
-        if (!gameManager.GetIsPaused())
-            PlayerCameraRotation();
+         PlayerCameraRotation();
     }
 
     private void PlayerCameraRotation() {
-        Debug.Log(!gameManager.GetIsPaused());
         CameraPitch += _input.look.y * LookSensivity;
         CameraPitch = Mathf.Clamp(CameraPitch, -90f, 90f);
         PlayerRotation = _input.look.x * LookSensivity;
