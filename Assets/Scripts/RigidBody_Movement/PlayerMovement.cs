@@ -115,6 +115,8 @@ public class PlayerMovement : MonoBehaviour {
     void Move() {
 
         // reset aos boosts e velocidades se o marmelo estiver parado
+        // se nao estiver a carregar no wasd OU
+        // se a velocidade do rb for 0
         if(MovingDirection().magnitude <= 0.1f) {
             CurrentRunningSpeed = 0f;
             CurrentJumpBoost = 0f;
