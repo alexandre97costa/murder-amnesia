@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    private bool IsPaused;
+    public bool IsPaused;
 
     public GameObject PauseMenu;
 
@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         PauseMenu.gameObject.SetActive(false);
+        Time.timeScale = 1;
+        playerCamera.enabled = true;
         Cursor.lockState = CursorLockMode.Locked; 
         Cursor.visible = false;
     }
@@ -28,18 +30,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void PauseGame()
+    public void PauseGame()
     {
         Time.timeScale = 0;
         PauseMenu.gameObject.SetActive(true);
         playerCamera.enabled = false;
+        Cursor.lockState = CursorLockMode.None; 
+        Cursor.visible = true;
     }
 
-    private void ResumeGame()
+    public void ResumeGame()
     {
         Time.timeScale = 1;
         PauseMenu.gameObject.SetActive(false);
         playerCamera.enabled = true;
+        Cursor.lockState = CursorLockMode.Locked; 
+        Cursor.visible = false;
+    }
+
+    public void GoMenu()
+    {
+         SceneManager.LoadScene("MenuStart");
     }
 
     public bool GetIsPaused()

@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour {
     public float GelDuration = 10f;
     public float MaxGelBoost = 5f;
     public bool isGelActivated = false;
-    private float GelTimer = 0f;
+    [HideInInspector] public float GelTimer = 0f;
     private bool isRespawning = false;
     public GameObject gelPrefab;
     public Transform gelSpawnPoint;
@@ -121,7 +121,7 @@ public class PlayerMovement : MonoBehaviour {
         // se nao estiver a carregar no wasd OU
         // se a velocidade do rb for 0
         if(MovingDirection().magnitude <= 0.1f) {
-            CurrentRunningSpeed = 0f;
+            CurrentRunningSpeed = RunInitialSpeed;
             CurrentJumpBoost = 0f;
         }
 
@@ -137,6 +137,8 @@ public class PlayerMovement : MonoBehaviour {
         {
             TotalSpeed = CrouchSpeed;
         }
+
+        groundDrag = TotalSpeed * 0.8f;
 
         _rb.AddForce(MovingDirection() * TotalSpeed * (grounded ? 1f : AirMultiplier) * 10f, ForceMode.Force);
 
