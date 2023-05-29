@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour {
 
     [Space(10)]
     [Header("Jump")]
-    public float JumpHeight = 2f;
+    public float JumpHeight = 3f;
     public float JumpCooldown = 1f;
     public bool isJumping = false;
     public bool CanJump = true;
@@ -25,7 +25,12 @@ public class PlayerMovement : MonoBehaviour {
 
     [Space(10)]
     [Header("Wall Jump")]
-    public bool canWallJump = false;
+    public float WallJumpHeight = 3f;
+    public float WallJumpPushMultiplier = 2f;
+    public float WallJumpCooldown = 0.1f;
+    public bool CanWallJump = true;
+    public bool IsTouchingWall = false;
+    private Vector3 WallJumpNormal = Vector3.zero;
 
     [Space(10)]
     [Header("Crouch")]
@@ -97,7 +102,6 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void LateUpdate() {
-        canWallJump = CanWallJump();
         grounded = IsGrounded();
         isJumping = !IsGrounded();
 
@@ -246,35 +250,36 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void WallJump() {
-    }
+        if(_input.jump && !grounded && IsTouchingWall && CanWallJump) {
+            // cooldown
+            CanWallJump = false;
+            Invoke(nameof(ResetWallJump), WallJumpCooldown);
 
-    private bool CanWallJump() {
-        // https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
-        // Bit shift the index of the layer (8) to get a bit mask
-        int layerMask = 1 << 8;
-        // This would cast rays only against colliders in layer 8.
-        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
-        layerMask = ~layerMask;
+            // reset vertical speed
+            _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
 
-        RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
-
-        // https://docs.unity3d.com/ScriptReference/Physics.SphereCast.html
-        if (Physics.SphereCast(
-            transform.position,                         // origin
-            _collider.radius + 0.2f,                    // radius
-            transform.TransformDirection(Vector3.up),   // direction
-            out hit,                                    // hit info
-            1f,                                         // max distance
-            layerMask))                                 // layer mask (tudo menos o player, que está na layer 8)
-        {
-            if (hit.collider.CompareTag("Wall")) {
-                return true;
-            }
+            // add força pra cima e para o lado contrário à parede
+            _rb.AddForce((transform.up * WallJumpHeight + WallJumpNormal * WallJumpPushMultiplier) * 3f, ForceMode.Impulse);
         }
-        return false;
-
     }
+    private void ResetWallJump() { CanWallJump = true; }
+
+    void OnCollisionStay(Collision collisionInfo) {
+
+        if(collisionInfo.collider.CompareTag("Wall")) {
+            WallJumpNormal = collisionInfo.GetContact(0).normal;
+            IsTouchingWall = true;
+        } 
+        
+    }
+
+    void OnCollisionExit(Collision collisionInfo) {
+        if(collisionInfo.collider.CompareTag("Wall")) {
+            IsTouchingWall = false;
+
+        }
+    }
+
 
     void NewCameraPosition(float newHeight)
     {

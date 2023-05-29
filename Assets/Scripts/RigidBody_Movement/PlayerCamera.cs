@@ -34,7 +34,8 @@ public class PlayerCamera : MonoBehaviour
     }
 
     private void PlayerCameraRotation() {
-        CameraPitch += Mathf.Clamp(_input.look.y * LookSensivity, -90f, 90f);
+        CameraPitch += _input.look.y * LookSensivity;
+        CameraPitch = Mathf.Clamp(CameraPitch, -90f, 90f);
         PlayerRotation = _input.look.x * LookSensivity;
 
 
