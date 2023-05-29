@@ -69,7 +69,6 @@ public class AnimationsControllers : MonoBehaviour
 
     private void EnableStepsSound()
     {
-        Debug.Log("Ativei");
         if(footSteps.enabled == false)
         {
             footSteps.enabled = true;
@@ -79,7 +78,6 @@ public class AnimationsControllers : MonoBehaviour
 
     private void DisableStepsSound()
     {
-        Debug.Log("Desativei");
         footSteps.enabled = false;
         footSteps.Stop();
     }
