@@ -29,7 +29,7 @@ public class PlayerCamera : MonoBehaviour
     }
 
     void Update() {
-        PlayerSpeed = new Vector3(_rb.velocity.z, 0, _rb.velocity.z).magnitude;
+        PlayerSpeed = new Vector3(_rb.velocity.x, 0 /*, _rb.velocity.z */).magnitude;
         PlayerSpeed = Mathf.Round(PlayerSpeed * 100) / 100;
         // Debug.Log("PlayerSpeed: " + PlayerSpeed);
 
