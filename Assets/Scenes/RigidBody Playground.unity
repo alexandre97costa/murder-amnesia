@@ -327,6 +327,7 @@ MonoBehaviour:
   GelDuration: 10
   MaxGelBoost: 5
   isGelActivated: 0
+  GelTimer: 0
   gelPrefab: {fileID: 2757868613380162441, guid: 3f20963c3a6ebb54fa4e89e5edc2a021,
     type: 3}
   gelSpawnPoint: {fileID: 2757868613380162437, guid: 3f20963c3a6ebb54fa4e89e5edc2a021,
@@ -2009,8 +2010,33 @@ PrefabInstance:
     - target: {fileID: 1657356661029776710, guid: 222a60738ddc3cd4d9e688c3283e5387,
         type: 3}
       propertyPath: m_CastShadows
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1657356661029776710, guid: 222a60738ddc3cd4d9e688c3283e5387,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 79281ba9c43777a42879401625082225, type: 2}
+    - target: {fileID: 1657356661029776710, guid: 222a60738ddc3cd4d9e688c3283e5387,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3c33c81369b9c344c9499df5711277ea, type: 2}
+    - target: {fileID: 1657356661029776710, guid: 222a60738ddc3cd4d9e688c3283e5387,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 554c0b384d320c048803f5c059539e79, type: 2}
+    - target: {fileID: 1657356661029776710, guid: 222a60738ddc3cd4d9e688c3283e5387,
+        type: 3}
+      propertyPath: m_Materials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: e2ae505868bd34f43b9f171e03172b56, type: 2}
+    - target: {fileID: 1657356661029776710, guid: 222a60738ddc3cd4d9e688c3283e5387,
+        type: 3}
+      propertyPath: m_Materials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3c33c81369b9c344c9499df5711277ea, type: 2}
     - target: {fileID: 1729790284495892775, guid: 222a60738ddc3cd4d9e688c3283e5387,
         type: 3}
       propertyPath: m_Layer
