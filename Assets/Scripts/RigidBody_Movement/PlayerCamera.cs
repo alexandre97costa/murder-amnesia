@@ -33,7 +33,7 @@ public class PlayerCamera : MonoBehaviour
         PlayerSpeed = Mathf.Round(PlayerSpeed * 100) / 100;
         // Debug.Log("PlayerSpeed: " + PlayerSpeed);
 
-        Fov(60f + (PlayerSpeed * 0.7f));
+        Fov(60f + (PlayerSpeed * 0.8f));
     }
 
     // Update is called once per frame
