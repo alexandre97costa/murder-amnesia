@@ -138,7 +138,7 @@ public class PlayerMovement : MonoBehaviour {
             TotalSpeed = CrouchSpeed;
         }
 
-        groundDrag = TotalSpeed * 0.8f;
+        groundDrag = TotalSpeed * 0.80f;
 
         _rb.AddForce(MovingDirection() * TotalSpeed * (grounded ? 1f : AirMultiplier) * 10f, ForceMode.Force);
 

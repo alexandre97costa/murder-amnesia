@@ -29,5 +29,7 @@ public class GameEnd : MonoBehaviour
 
     void GoToMenu() {
         SceneManager.LoadScene("MenuStart");
+        Cursor.lockState = CursorLockMode.None; 
+        Cursor.visible = true;
     }
 }
