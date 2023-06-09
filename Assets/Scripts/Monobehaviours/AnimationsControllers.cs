@@ -25,9 +25,9 @@ public class AnimationsControllers : MonoBehaviour
 
     public void IdleAction() { Set(15); animator.SetBool("isAction", false); DisableStepsSound(); }
 
-    public void FallAction() { Set(0); animator.SetBool("isAction", true); }
+    public void FallAction() { Set(0); animator.SetBool("isAction", true); DisableStepsSound(); }
 
-    public void JumpAction() { Set(1); animator.SetBool("isAction", true); }
+    public void JumpAction() { Set(1); animator.SetBool("isAction", true); DisableStepsSound(); }
 
     public void RunBackAction() { Set(2); animator.SetBool("isAction", true); EnableStepsSound(); }
 
@@ -51,21 +51,21 @@ public class AnimationsControllers : MonoBehaviour
     
     public void StrafeRightAction() { Set(12); animator.SetBool("isAction", true); EnableStepsSound(); }
     
-    public void RunJumpAction() { Set(13); animator.SetBool("isAction", true); }
+    public void RunJumpAction() { Set(13); animator.SetBool("isAction", true); DisableStepsSound(); }
 
-    public void SlideAction() { Set(14); animator.SetBool("isAction", true); }
+    public void SlideAction() { Set(14); animator.SetBool("isAction", true); DisableStepsSound(); }
 
-    public void CrounchAction() { Set(16); animator.SetBool("isAction", true); }
+    public void CrounchAction() { Set(16); animator.SetBool("isAction", true); DisableStepsSound(); }
     
-    public void CrounchFrontAction() { Set(17); animator.SetBool("isAction", true); }
+    public void CrounchFrontAction() { Set(17); animator.SetBool("isAction", true); DisableStepsSound(); }
 
-    public void CrounchLeftAction() { Set(18); animator.SetBool("isAction", true); }
+    public void CrounchLeftAction() { Set(18); animator.SetBool("isAction", true); DisableStepsSound(); }
 
-    public void CrounchRightAction() { Set(19); animator.SetBool("isAction", true); }
+    public void CrounchRightAction() { Set(19); animator.SetBool("isAction", true); DisableStepsSound(); }
 
-    public void JumpMidAirAction() { Set(20); animator.SetBool("isAction", true); }
+    public void JumpMidAirAction() { Set(20); animator.SetBool("isAction", true); DisableStepsSound(); }
     
-    public void LandAction() { Set(21); animator.SetBool("isAction", true); }
+    public void LandAction() { Set(21); animator.SetBool("isAction", true); DisableStepsSound(); }
 
     private void EnableStepsSound()
     {
