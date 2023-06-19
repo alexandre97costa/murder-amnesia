@@ -56,6 +56,27 @@ public class PlayerMovement : MonoBehaviour {
     public Transform gelSpawnPoint;
 
     [Space(10)]
+    [Header("Sliding")]
+	public float maxSlideBoost;
+	public float slideForce;
+	private float slideTimer;
+	public float slideYScale;
+	private float startYScale;
+    private bool sliding;
+
+    [Header ("Input")]
+	public KeyCode slideKey = KeyCode.LeftControl;
+	private float horizontalInputS;
+	private float verticalInputS;
+
+    [Header("References")]
+	public Transform orientation;
+	public Transform playerObj;
+	private Rigidbody rb;
+	private PlayerMovementAdvanced pm;
+
+
+    [Space(10)]
     [Header("Other")]
     public bool grounded = true;
     public float groundDrag = 1f;
@@ -85,10 +106,17 @@ public class PlayerMovement : MonoBehaviour {
         _camera = transform.Find("CameraPosition").gameObject;
 
         standingHeight = _collider.height;
+
+        //sliding
+		rb = GetComponent<Rigidbody>();
+		pm = GetComponent<PlayerMovementAdvanced>();
+
+		startYScale = playerObj.localScale.y;
     }
 
     void Update() {
         CheckGel(); //para maior precisao nos segundos
+        UpdateSlide();
     }
 
     void FixedUpdate() {
@@ -101,6 +129,7 @@ public class PlayerMovement : MonoBehaviour {
         Crouch();
         Jump();
         WallJump();
+        FixedUpdateSliding();
         Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 // mas eu queria meter por baixo :( // faz crounch no meu rigidbody <3 // ulalah
     }
 
@@ -316,4 +345,54 @@ public class PlayerMovement : MonoBehaviour {
     bool IsGrounded() {
         return Physics.CheckSphere(GroundCheck.transform.position + new Vector3(0, GroundCheckSphereRadius - 0.2f, 0), GroundCheckSphereRadius, ~CharacterLayer);
     }
+
+    private void StartSlide()
+	{
+		sliding = true;
+
+		playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale,playerObj.localScale.z);
+		rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+
+		slideTimer = maxSlideBoost;
+	}
+
+	private void UpdateSlide()
+	{
+		horizontalInputS = Input.GetAxisRaw("Horizontal");
+		verticalInputS = Input.GetAxisRaw("Vertical");
+
+		if(Input.GetKeyDown(slideKey) && (horizontalInputS != 0 || verticalInputS !=0))
+		StartSlide();
+
+		if(Input.GetKeyUp(slideKey) && sliding)
+		StopSlide();
+	}
+
+	private void FixedUpdateSliding()
+	{
+		if(sliding)
+			SlidingMovement();
+
+	}
+
+	private void SlidingMovement()
+	{
+		Vector3 inputDirection = orientation.forward * verticalInputS + orientation.right * horizontalInputS;
+
+		rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
+
+		slideTimer -= Time.deltaTime;
+
+		if(slideTimer <= 0)
+			StopSlide();
+				
+	}
+
+	private void StopSlide()
+	{
+		sliding = false;
+
+		playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
+	}
+
 }
