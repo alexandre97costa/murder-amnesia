@@ -72,7 +72,6 @@ public class PlayerMovement : MonoBehaviour {
     [Header("References")]
 	public Transform orientation;
 	public Transform playerObj;
-	private Rigidbody rb;
 	private PlayerMovementAdvanced pm;
 
 
@@ -108,9 +107,7 @@ public class PlayerMovement : MonoBehaviour {
         standingHeight = _collider.height;
 
         //sliding
-		rb = GetComponent<Rigidbody>();
-		pm = GetComponent<PlayerMovementAdvanced>();
-
+        pm = GetComponent<PlayerMovementAdvanced>();
 		startYScale = playerObj.localScale.y;
     }
 
@@ -351,7 +348,7 @@ public class PlayerMovement : MonoBehaviour {
 		sliding = true;
 
 		playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale,playerObj.localScale.z);
-		rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+		_rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
 
 		slideTimer = maxSlideBoost;
 	}
@@ -379,7 +376,7 @@ public class PlayerMovement : MonoBehaviour {
 	{
 		Vector3 inputDirection = orientation.forward * verticalInputS + orientation.right * horizontalInputS;
 
-		rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
+		_rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
 
 		slideTimer -= Time.deltaTime;
 
