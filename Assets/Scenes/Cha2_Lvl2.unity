@@ -11158,8 +11158,8 @@ MonoBehaviour:
     type: 3}
   gelSpawnPoint: {fileID: 690693707}
   maxSlideBoost: 0
-  slideForce: 0
-  slideYScale: 0
+  slideForce: 200
+  slideYScale: 1
   slideKey: 306
   orientation: {fileID: 0}
   playerObj: {fileID: 0}

@@ -59,10 +59,10 @@ public class PlayerMovement : MonoBehaviour {
     [Header("Sliding")]
 	public float maxSlideBoost;
 	public float slideForce;
-	private float slideTimer;
+	public float slideTimer;
 	public float slideYScale;
-	private float startYScale;
-    private bool sliding;
+	public float startYScale;
+    public bool isSliding;
 
     [Header ("Input")]
 	public KeyCode slideKey = KeyCode.LeftControl;
@@ -113,7 +113,6 @@ public class PlayerMovement : MonoBehaviour {
 
     void Update() {
         CheckGel(); //para maior precisao nos segundos
-        UpdateSlide();
     }
 
     void FixedUpdate() {
@@ -126,7 +125,6 @@ public class PlayerMovement : MonoBehaviour {
         Crouch();
         Jump();
         WallJump();
-        FixedUpdateSliding();
         Move(); // deixar o move sempre pra ultimo pls //Ok caro colega <3 // mas eu queria meter por baixo :( // faz crounch no meu rigidbody <3 // ulalah
     }
 
@@ -210,6 +208,12 @@ public class PlayerMovement : MonoBehaviour {
 
     void Crouch()
     {
+        if (isCrouched && _rb.velocity.y < 0)
+        {
+            isSliding = true;
+        } else { isSliding = false; }
+
+
         // se est� no ch�o, premiu crouch, e est� parado
         if (
             (grounded && _input.crouch /*&& TotalSpeed <= CrouchSpeed*/) ||
@@ -343,53 +347,59 @@ public class PlayerMovement : MonoBehaviour {
         return Physics.CheckSphere(GroundCheck.transform.position + new Vector3(0, GroundCheckSphereRadius - 0.2f, 0), GroundCheckSphereRadius, ~CharacterLayer);
     }
 
-    private void StartSlide()
-	{
-		sliding = true;
+ //   private void StartSlide()
+	//{
+	//	isSliding = true;
 
-		playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale,playerObj.localScale.z);
-		_rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+	//	playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale,playerObj.localScale.z);
+	//	_rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
 
-		slideTimer = maxSlideBoost;
-	}
+	//	slideTimer = maxSlideBoost;
+	//}
 
-	private void UpdateSlide()
-	{
-		horizontalInputS = Input.GetAxisRaw("Horizontal");
-		verticalInputS = Input.GetAxisRaw("Vertical");
+	//private void UpdateSlide()
+	//{
+	//	horizontalInputS = Input.GetAxisRaw("Horizontal");
+	//	verticalInputS = Input.GetAxisRaw("Vertical");
 
-		if(Input.GetKeyDown(slideKey) && (horizontalInputS != 0 || verticalInputS !=0))
-		StartSlide();
+ //       Debug.Log("horizontalInputS: " + horizontalInputS);
+ //       Debug.Log("verticalInputS: " + verticalInputS);
 
-		if(Input.GetKeyUp(slideKey) && sliding)
-		StopSlide();
-	}
 
-	private void FixedUpdateSliding()
-	{
-		if(sliding)
-			SlidingMovement();
+	//	if (Input.GetKeyDown(slideKey) && (horizontalInputS < 0 || verticalInputS < 0))
+	//	    StartSlide();
 
-	}
+	//	if(Input.GetKeyUp(slideKey) && isSliding)
+	//	    StopSlide();
+	//}
 
-	private void SlidingMovement()
-	{
-		Vector3 inputDirection = orientation.forward * verticalInputS + orientation.right * horizontalInputS;
+	//private void FixedUpdateSliding()
+	//{
+ //       UpdateSlide();
 
-		_rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
+ //       if (isSliding)
+	//		SlidingMovement();
 
-		slideTimer -= Time.deltaTime;
+	//}
 
-		if(slideTimer <= 0)
-			StopSlide();
+	//private void SlidingMovement()
+	//{
+	//	Vector3 inputDirection = orientation.forward * verticalInputS + orientation.right * horizontalInputS;
+
+	//	_rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
+
+	//	slideTimer -= Time.deltaTime;
+
+	//	if(slideTimer <= 0)
+	//		StopSlide();
 				
-	}
+	//}
 
-	private void StopSlide()
-	{
-		sliding = false;
+	//private void StopSlide()
+	//{
+ //       isSliding = false;
 
-		playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
-	}
+	//	playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
+	//}
 
 }
