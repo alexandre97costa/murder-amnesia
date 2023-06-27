@@ -208,10 +208,8 @@ public class PlayerMovement : MonoBehaviour {
 
     void Crouch()
     {
-        if (isCrouched && _rb.velocity.y < 0)
-        {
-            isSliding = true;
-        } else { isSliding = false; }
+        if (isCrouched && _rb.velocity.y < 0) { isSliding = true; } 
+        else { isSliding = false; }
 
 
         // se est� no ch�o, premiu crouch, e est� parado

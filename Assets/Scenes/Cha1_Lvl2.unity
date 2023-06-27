@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3672,8 +3672,11 @@ MonoBehaviour:
     type: 3}
   gelSpawnPoint: {fileID: 0}
   maxSlideBoost: 0
-  slideForce: 0
-  slideYScale: 0
+  slideForce: 200
+  slideTimer: 0
+  slideYScale: 1
+  startYScale: 0
+  isSliding: 0
   slideKey: 306
   orientation: {fileID: 0}
   playerObj: {fileID: 0}
@@ -4091,6 +4094,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6626658401981169639, guid: 92f4e3eaa924cd2488fb438b2f08a5d9,
+        type: 3}
+      propertyPath: sceneSelect
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92f4e3eaa924cd2488fb438b2f08a5d9, type: 3}
