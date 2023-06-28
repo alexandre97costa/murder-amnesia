@@ -3483,11 +3483,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7b015cec25f16454f9592af9d63cdd07, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -3618,7 +3618,15 @@ MonoBehaviour:
   - {fileID: 22100000, guid: 7733172262428014ca532ce2b3f3047c, type: 2}
   - {fileID: 22100000, guid: cfd1dfb26daae8c41b48aeb7f85c977c, type: 2}
   overrider: {fileID: 2129322495}
-  footSteps: {fileID: 2129322492}
+  listAudios:
+  - {fileID: 8300000, guid: 8f9ba4f83849aea4d9baf3d63637d3bc, type: 3}
+  - {fileID: 8300000, guid: 7b015cec25f16454f9592af9d63cdd07, type: 3}
+  - {fileID: 8300000, guid: b3516cbdd20538441bdad598e8cfd8c0, type: 3}
+  - {fileID: 8300000, guid: c3a0ac738e9a54e4ebeeca8fb880275f, type: 3}
+  - {fileID: 8300000, guid: 20feca0824001be46ad103dc52f08722, type: 3}
+  - {fileID: 8300000, guid: 2c016faac44c5d842afafe62863a9ec2, type: 3}
+  - {fileID: 8300000, guid: 936d20f7b93fe2946b48b5abd4b4d1c3, type: 3}
+  audioSource: {fileID: 2129322492}
 --- !u!114 &2129322495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3646,6 +3654,7 @@ MonoBehaviour:
   RunInitialSpeed: 4
   RunMaxSpeed: 7
   RunSpeedMultiplier: 0.01
+  CurrentRunningSpeed: 0
   JumpHeight: 3
   JumpCooldown: 0.2
   isJumping: 0

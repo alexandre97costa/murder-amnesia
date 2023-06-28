@@ -17,11 +17,13 @@ public class AnimationsControllers : MonoBehaviour
     private float maxPlayerSpeed = 10f;
     private float maxPitchMultiplier = 2f;
 
+    private PlayerMovement playerMovement;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-
         animator = GetComponent<Animator>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     public void Set(int value) { overrider.SetAnimations(overrideControllers[value]); }
@@ -56,42 +58,71 @@ public class AnimationsControllers : MonoBehaviour
     
     public void RunJumpAction() { Set(13); animator.SetBool("isAction", true); DisableAllSounds(); }
 
-    public void SlideAction() { Set(14); animator.SetBool("isAction", true); DisableAllSounds(); }
+    public void SlideAction() { Set(14); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("slide"); }
 
     public void CrounchAction() { Set(16); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouch"); }
     
-    public void CrounchFrontAction() { Set(17); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouch"); }
+    public void CrounchFrontAction() { Set(17); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouchWalk"); }
 
-    public void CrounchLeftAction() { Set(18); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouch"); }
+    public void CrounchLeftAction() { Set(18); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouchWalk"); }
 
-    public void CrounchRightAction() { Set(19); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouch"); }
+    public void CrounchRightAction() { Set(19); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouchWalk"); }
 
     public void JumpMidAirAction() { Set(20); animator.SetBool("isAction", true); DisableAllSounds(); }
     
-    public void LandAction() { Set(21); animator.SetBool("isAction", true); DisableAllSounds(); }
+    public void LandAction() { Set(21); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("landing"); }
 
     private void EnabledSound(string soundIndex)
     {
-        int index = listAudios.FindIndex(x => x.name == soundIndex);
+        int index = listAudios.FindIndex(x => x.name == soundIndex); //Encontrar o som na lista
 
         if(index == -1) { Debug.LogError("Audio não existe"); return; }
 
-        auxAudioClip = listAudios[index];
-        audioSource.clip = listAudios[index];
-        audioSource.Play();
+        if (playerMovement.CurrentRunningSpeed > 4 && !playerMovement.CanJump) 
+        {
+            auxAudioClip = listAudios[1];
+            audioSource.clip = listAudios[1];
+            audioSource.Play();
+            return;
+        }
+
+        if (soundIndex == "slide") { audioSource.loop = true; }
+        else { audioSource.loop = false; }
+
+        Debug.Log("playerMovement.grounded: " + playerMovement.grounded);
+        Debug.Log("playerMovement.isLanding: " + playerMovement.isLanding);
+
+
+        if (playerMovement.grounded && playerMovement.isLanding) {
+            auxAudioClip = listAudios[4];
+            audioSource.clip = listAudios[4];
+            audioSource.Play();
+            Debug.Log("Entrei aqui");
+            return;
+        }
+
+        if(auxAudioClip != listAudios[index])
+        {
+            auxAudioClip = listAudios[index];
+            audioSource.clip = listAudios[index];
+            audioSource.Play();
+        }
     }
 
     private void DisableAllSounds()
     {
         if(audioSource.clip != auxAudioClip)
-        {
             audioSource.Stop();
-        }
     }
 
     private void IdleSound()
     {
-        audioSource.Stop();
-        Debug.Log("Idle");
+        if (auxAudioClip != listAudios[0])
+        {
+            audioSource.loop = true;
+            auxAudioClip = listAudios[0];
+            audioSource.clip = listAudios[0];
+            audioSource.Play();
+        } else { audioSource.loop = false; }
     }
 }

@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour {
     public float RunInitialSpeed = 6f;
     public float RunMaxSpeed = 12f;
     public float RunSpeedMultiplier = 0.1f;
-    private float CurrentRunningSpeed = 0;
+    [HideInInspector] public float CurrentRunningSpeed = 0;
 
     [Space(10)]
     [Header("Jump")]
@@ -184,6 +184,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void Jump()
     {
+        if(isJumping) { isFalling = true; }
         if (_input.jump && grounded && CanJump) {
             CanJump = false;
             CurrentJumpBoost = (CurrentJumpBoost >= MaxJumpBoost) ? MaxJumpBoost : (CurrentJumpBoost + JumpBoost);
@@ -199,10 +200,7 @@ public class PlayerMovement : MonoBehaviour {
 
         } else { isFalling = false; }
 
-        if(!isFalling && isJumping && !isMidAir && CanJump)
-        {
-            isLanding = true;
-        } else { isLanding = false; }
+        if (!isJumping && IsGrounded()) { isLanding = false; }
     }
     private void ResetJump() { CanJump = true; }
 
