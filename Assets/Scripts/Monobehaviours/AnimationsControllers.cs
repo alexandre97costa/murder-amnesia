@@ -11,74 +11,87 @@ public class AnimationsControllers : MonoBehaviour
 
     [Space(10)]
     [Header("Sounds")]
-    public AudioSource footSteps;
+    public List<AudioClip> listAudios;
+    public AudioSource audioSource;
+    private AudioClip auxAudioClip;
     private float maxPlayerSpeed = 10f;
     private float maxPitchMultiplier = 2f;
 
     private void Awake()
     {
-        footSteps = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
+
         animator = GetComponent<Animator>();
     }
 
     public void Set(int value) { overrider.SetAnimations(overrideControllers[value]); }
 
-    public void IdleAction() { Set(15); animator.SetBool("isAction", false); DisableStepsSound(); }
+    public void IdleAction() { Set(15); animator.SetBool("isAction", false); IdleSound(); }
 
-    public void FallAction() { Set(0); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void FallAction() { Set(0); animator.SetBool("isAction", true); DisableAllSounds(); }
 
-    public void JumpAction() { Set(1); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void JumpAction() { Set(1); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("jump01"); }
 
-    public void RunBackAction() { Set(2); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void RunBackAction() { Set(2); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
 
-    public void RunLeftBackAction() { Set(3); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void RunLeftBackAction() { Set(3); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
 
-    public void RunRightBackAction() { Set(4); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void RunRightBackAction() { Set(4); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
 
-    public void RunAction() { EnableStepsSound(); Set(5); animator.SetBool("isAction", true); }
+    public void RunAction() { Set(5); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
 
-    public void RunLeftAction() { Set(6); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void RunLeftAction() { Set(6); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
 
-    public void RunRightAction() { Set(7); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void RunRightAction() { Set(7); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
 
-    public void SprintAction() { Set(8); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void SprintAction() { Set(8); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
 
-    public void SprintLeftAction() { Set(9); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void SprintLeftAction() { Set(9); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
     
-    public void SprintRightAction() { Set(10); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void SprintRightAction() { Set(10); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
 
-    public void StrafeLeftAction() { Set(11); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void StrafeLeftAction() { Set(11); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
     
-    public void StrafeRightAction() { Set(12); animator.SetBool("isAction", true); EnableStepsSound(); }
+    public void StrafeRightAction() { Set(12); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("runSprint"); }
     
-    public void RunJumpAction() { Set(13); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void RunJumpAction() { Set(13); animator.SetBool("isAction", true); DisableAllSounds(); }
 
-    public void SlideAction() { Set(14); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void SlideAction() { Set(14); animator.SetBool("isAction", true); DisableAllSounds(); }
 
-    public void CrounchAction() { Set(16); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void CrounchAction() { Set(16); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouch"); }
     
-    public void CrounchFrontAction() { Set(17); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void CrounchFrontAction() { Set(17); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouch"); }
 
-    public void CrounchLeftAction() { Set(18); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void CrounchLeftAction() { Set(18); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouch"); }
 
-    public void CrounchRightAction() { Set(19); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void CrounchRightAction() { Set(19); animator.SetBool("isAction", true); DisableAllSounds(); EnabledSound("crouch"); }
 
-    public void JumpMidAirAction() { Set(20); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void JumpMidAirAction() { Set(20); animator.SetBool("isAction", true); DisableAllSounds(); }
     
-    public void LandAction() { Set(21); animator.SetBool("isAction", true); DisableStepsSound(); }
+    public void LandAction() { Set(21); animator.SetBool("isAction", true); DisableAllSounds(); }
 
-    private void EnableStepsSound()
+    private void EnabledSound(string soundIndex)
     {
-        if(footSteps.enabled == false)
+        int index = listAudios.FindIndex(x => x.name == soundIndex);
+
+        if(index == -1) { Debug.LogError("Audio não existe"); return; }
+
+        auxAudioClip = listAudios[index];
+        audioSource.clip = listAudios[index];
+        audioSource.Play();
+    }
+
+    private void DisableAllSounds()
+    {
+        if(audioSource.clip != auxAudioClip)
         {
-            footSteps.enabled = true;
-            footSteps.Play();
+            audioSource.Stop();
         }
     }
 
-    private void DisableStepsSound()
+    private void IdleSound()
     {
-        footSteps.enabled = false;
-        footSteps.Stop();
+        audioSource.Stop();
+        Debug.Log("Idle");
     }
 }
