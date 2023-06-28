@@ -89,18 +89,6 @@ public class AnimationsControllers : MonoBehaviour
         if (soundIndex == "slide") { audioSource.loop = true; }
         else { audioSource.loop = false; }
 
-        Debug.Log("playerMovement.grounded: " + playerMovement.grounded);
-        Debug.Log("playerMovement.isLanding: " + playerMovement.isLanding);
-
-
-        if (playerMovement.grounded && playerMovement.isLanding) {
-            auxAudioClip = listAudios[4];
-            audioSource.clip = listAudios[4];
-            audioSource.Play();
-            Debug.Log("Entrei aqui");
-            return;
-        }
-
         if(auxAudioClip != listAudios[index])
         {
             auxAudioClip = listAudios[index];
