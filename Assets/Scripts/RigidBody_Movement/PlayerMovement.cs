@@ -71,7 +71,6 @@ public class PlayerMovement : MonoBehaviour {
 
     [Header("References")]
 	public Transform orientation;
-	public Transform playerObj;
 	private PlayerMovementAdvanced pm;
 
 
@@ -107,8 +106,8 @@ public class PlayerMovement : MonoBehaviour {
         standingHeight = _collider.height;
 
         //sliding
-        pm = GetComponent<PlayerMovementAdvanced>();
-		startYScale = playerObj.localScale.y;
+        //pm = GetComponent<PlayerMovementAdvanced>();
+		//startYScale = playerObj.localScale.y;
     }
 
     void Update() {
