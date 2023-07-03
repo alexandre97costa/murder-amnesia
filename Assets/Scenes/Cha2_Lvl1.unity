@@ -12200,7 +12200,8 @@ MonoBehaviour:
   - {fileID: 22100000, guid: 7733172262428014ca532ce2b3f3047c, type: 2}
   - {fileID: 22100000, guid: cfd1dfb26daae8c41b48aeb7f85c977c, type: 2}
   overrider: {fileID: 1456192884}
-  footSteps: {fileID: 1456192881}
+  listAudios: []
+  audioSource: {fileID: 0}
 --- !u!114 &1456192884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12228,6 +12229,7 @@ MonoBehaviour:
   RunInitialSpeed: 3
   RunMaxSpeed: 5
   RunSpeedMultiplier: 0.01
+  CurrentRunningSpeed: 0
   JumpHeight: 3
   JumpCooldown: 0.2
   isJumping: 0
@@ -12261,7 +12263,6 @@ MonoBehaviour:
   isSliding: 0
   slideKey: 306
   orientation: {fileID: 0}
-  playerObj: {fileID: 0}
   grounded: 1
   groundDrag: 3
   airDrag: 2
