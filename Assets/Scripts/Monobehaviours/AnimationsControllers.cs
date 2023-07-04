@@ -78,10 +78,11 @@ public class AnimationsControllers : MonoBehaviour
 
         if(index == -1) { Debug.LogError("Audio não existe"); return; }
 
+
         if (playerMovement.CurrentRunningSpeed > 4 && !playerMovement.CanJump) 
         {
-            auxAudioClip = listAudios[1];
-            audioSource.clip = listAudios[1];
+            auxAudioClip = listAudios[3];
+            audioSource.clip = listAudios[3];
             audioSource.Play();
             return;
         }
