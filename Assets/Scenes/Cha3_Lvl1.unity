@@ -15476,7 +15476,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsPaused: 0
   PauseMenu: {fileID: 1996140578}
-  playerCamera: {fileID: 0}
+  playerCamera: {fileID: 1561600139}
 --- !u!4 &2001923793
 Transform:
   m_ObjectHideFlags: 0

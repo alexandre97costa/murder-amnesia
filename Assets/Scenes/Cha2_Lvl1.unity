@@ -7115,7 +7115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsPaused: 0
   PauseMenu: {fileID: 1235390702}
-  playerCamera: {fileID: 0}
+  playerCamera: {fileID: 929132496}
 --- !u!4 &901770818
 Transform:
   m_ObjectHideFlags: 0
@@ -7699,7 +7699,7 @@ MonoBehaviour:
   GelTimer: 0
   gelPrefab: {fileID: 315455131742275127, guid: 2d1be066591ed284b872bdaee6b6235c,
     type: 3}
-  gelSpawnPoint: {fileID: 0}
+  gelSpawnPoint: {fileID: 1491889993}
   maxSlideBoost: 0
   slideForce: 200
   slideTimer: 0

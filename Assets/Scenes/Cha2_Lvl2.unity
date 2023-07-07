@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18148229, g: 0.22321548, b: 0.28478298, a: 1}
+  m_IndirectSpecularColor: {r: 0.18148229, g: 0.2232155, b: 0.28478298, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6201,7 +6201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsPaused: 0
   PauseMenu: {fileID: 684295843}
-  playerCamera: {fileID: 0}
+  playerCamera: {fileID: 714629663}
 --- !u!4 &686885278
 Transform:
   m_ObjectHideFlags: 0
