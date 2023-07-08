@@ -33,7 +33,7 @@ EditorBuildSettings:
     path: Assets/Scenes/CutScenes/TesteCutScene.unity
     guid: 1087623d3013c91439f73a190f6095a0
   - enabled: 1
-    path: Assets/Scenes/CutScenes/CutScene 1.unity
+    path: Assets/Scenes/CutScenes/CutScene1.unity
     guid: 5f94929434eb64445b5eea6a274db442
   - enabled: 1
     path: Assets/Scenes/Cha3_Lvl1.unity
@@ -42,11 +42,20 @@ EditorBuildSettings:
     path: Assets/Scenes/Cha2_Lvl3.unity
     guid: 5c00a1497439fbf499881c8c1f75118d
   - enabled: 1
-    path: Assets/Scenes/CutScenes/CutScene 2.unity
+    path: Assets/Scenes/CutScenes/CutScene2.unity
     guid: 8d9ec536b0d579e46a554484acd55dbb
   - enabled: 1
-    path: Assets/Scenes/CutScenes/CutScene 4.unity
+    path: Assets/Scenes/CutScenes/CutScene4.unity
     guid: 8d2ec2fa74bfdf5439902d5fddf312ff
+  - enabled: 1
+    path: Assets/Scenes/CutScenes/CutScene3.unity
+    guid: 600a25a918847e046a508f482bded54b
+  - enabled: 1
+    path: Assets/Scenes/CutScenes/CutScene5.unity
+    guid: 01f1546788893eb428424270c143f51d
+  - enabled: 1
+    path: Assets/Scenes/CutScenes/CutScene6.unity
+    guid: 7791de19606ad2e44b48eeb7f0964143
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
       type: 2}
