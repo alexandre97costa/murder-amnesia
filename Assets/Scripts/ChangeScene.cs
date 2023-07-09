@@ -9,7 +9,7 @@ public class ChangeScene : MonoBehaviour
     [Header("Choose Scene")]
     public ListScene sceneSelect;
     private List<string> listScene = new List<string> {
-        "Cha1_Lvl2", "Cha1_Lvl3", "CutScene2", "Cha2_Lvl1", "Cha2_Lvl2", "Cha2_Lvl3", "CutScene3", "Cha3_Lvl1", "Cha3_Lv2", "CutScene4", "CutScene5", "CutScene6", "End", "DemoTutorial"
+        "Cha1_Lvl2", "Cha1_Lvl3", "CutScene2", "Cha2_Lvl1", "Cha2_Lvl2", "Cha2_Lvl3", "CutScene3", "Cha3_Lvl1", "Cha3_Lv2", "CutScene4", "CutScene5", "CutScene6", "End", "DemoTutorial", "MenuStart"
     };
 
     [Space(10)]
@@ -35,6 +35,7 @@ public class ChangeScene : MonoBehaviour
 
         End = 12,
         DemoTutorial = 13,
+        Menu = 14,
     }
 
     private void OnCollisionEnter(Collision collision)
