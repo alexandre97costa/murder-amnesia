@@ -20,9 +20,11 @@ public class GelManajer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.SetActive(!gm.IsPaused);
         
         GelText.text = "Duração do Gel: " + Mathf.Round(pm.GelTimer);
 
     }
+
+
+
 }
