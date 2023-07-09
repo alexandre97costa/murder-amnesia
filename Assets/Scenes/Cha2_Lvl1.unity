@@ -2046,8 +2046,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18c20dca33f9aa48b03c94e58216691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _noteImage: {fileID: 0}
-  MessagePanel: {fileID: 0}
+  _noteImage: {fileID: 885927739}
+  MessagePanel: {fileID: 1967835860}
   Action: 0
 --- !u!65 &281724343
 BoxCollider:
@@ -5674,7 +5674,7 @@ RectTransform:
   m_GameObject: {fileID: 743382387}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6125, y: 0.6125, z: 0.6125}
+  m_LocalScale: {x: 0.61249995, y: 0.61249995, z: 0.61249995}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1808645299}
@@ -12501,7 +12501,7 @@ MonoBehaviour:
   gm: {fileID: 901770817}
   Player: {fileID: 929132489}
   pm: {fileID: 929132495}
-  GelText: {fileID: 0}
+  GelText: {fileID: 743382389}
 --- !u!114 &1403467747
 MonoBehaviour:
   m_ObjectHideFlags: 0

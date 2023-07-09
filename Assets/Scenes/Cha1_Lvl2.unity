@@ -3381,7 +3381,7 @@ MonoBehaviour:
   gm: {fileID: 129969020}
   Player: {fileID: 2129322490}
   pm: {fileID: 2129322496}
-  GelText: {fileID: 0}
+  GelText: {fileID: 1029348728}
 --- !u!114 &565920274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5917,8 +5917,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 982647625}
   - {fileID: 1029348727}
+  - {fileID: 982647625}
   m_Father: {fileID: 0}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6480,7 +6480,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 866514974}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7062,11 +7062,11 @@ RectTransform:
   m_GameObject: {fileID: 1029348726}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6125, y: 0.6125, z: 0.6125}
+  m_LocalScale: {x: 0.61249995, y: 0.61249995, z: 0.61249995}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 866514974}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

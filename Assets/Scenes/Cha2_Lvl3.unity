@@ -1568,7 +1568,7 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1771608809}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3247,7 +3247,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1771608809}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7576,8 +7576,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18c20dca33f9aa48b03c94e58216691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _noteImage: {fileID: 0}
-  MessagePanel: {fileID: 0}
+  _noteImage: {fileID: 196814541}
+  MessagePanel: {fileID: 477197366}
   Action: 0
 --- !u!65 &1082559432
 BoxCollider:
@@ -8009,7 +8009,7 @@ MonoBehaviour:
   gm: {fileID: 946378532}
   Player: {fileID: 1226487621}
   pm: {fileID: 1226487627}
-  GelText: {fileID: 0}
+  GelText: {fileID: 2103359213}
 --- !u!114 &1179591784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11639,9 +11639,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2103359212}
   - {fileID: 477197367}
   - {fileID: 196814540}
-  - {fileID: 2103359212}
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13257,11 +13257,11 @@ RectTransform:
   m_GameObject: {fileID: 2103359211}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6125, y: 0.6125, z: 0.6125}
+  m_LocalScale: {x: 0.61249995, y: 0.61249995, z: 0.61249995}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1771608809}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
