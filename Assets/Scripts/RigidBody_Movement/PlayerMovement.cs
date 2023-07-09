@@ -54,6 +54,7 @@ public class PlayerMovement : MonoBehaviour {
     private bool isRespawning = false;
     public GameObject gelPrefab;
     public Transform gelSpawnPoint;
+    public GelManajer gelManager;
 
     [Space(10)]
     [Header("Sliding")]
@@ -105,6 +106,7 @@ public class PlayerMovement : MonoBehaviour {
 
         standingHeight = _collider.height;
 
+        gelManager = FindObjectOfType<GelManajer>();
         //sliding
         //pm = GetComponent<PlayerMovementAdvanced>();
 		//startYScale = playerObj.localScale.y;
@@ -288,6 +290,7 @@ public class PlayerMovement : MonoBehaviour {
         if(gel.CompareTag("Gel"))
         {
             ActivateGel(true);
+            gelManager.CollectGel();
             Destroy(gel.gameObject);
         }
     }
